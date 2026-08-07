@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: x402-agent-api
+  version: 0.1.0
+  description: Pay-per-request agent APIs on Algorand x402. Unpaid calls return HTTP 402.
+paths:
+  /health:
+    get:
+      summary: Liveness
+      responses:
+        "200":
+          description: OK
+  /v1/brief:
+    post:
+      summary: Morning brief (x402 paid)
+      description: Keyword-filtered multi-section intel brief with source links
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [keywords, sections]
+              properties:
+                keywords:
+                  type: array
+                  items: { type: string }
+                sections:
+                  type: array
+                  items:
+                    type: string
+                    enum: [tech, security, ai, finance, crypto, world, sports]
+                format:
+                  type: string
+                  enum: [markdown, json]
+                max_items_per_section:
+                  type: integer
+                synthesize:
+                  type: boolean
+                  default: false
+      responses:
+        "200":
+          description: Paid brief
+        "402":
+          description: Payment required
+  /internal/ingest:
+    post:
+      summary: Upsert feed items (bearer token)
+      responses:
+        "200":
+          description: Upsert counts
+        "401":
+          description: Unauthorized

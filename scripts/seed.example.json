@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "url": "https://example.com/k8s-cve-demo",
+      "title": "Kubernetes CVE demo item",
+      "summary": "Sample security-relevant Kubernetes patch note for local smoke tests.",
+      "source": "demo",
+      "section": "tech",
+      "published_at": "2026-08-06T12:00:00Z",
+      "keywords_hint": ["kubernetes", "cve"]
+    },
+    {
+      "url": "https://example.com/btc-macro",
+      "title": "BTC volatility and Fed watch",
+      "summary": "Crypto markets react to rate-path chatter.",
+      "source": "demo",
+      "section": "crypto",
+      "published_at": "2026-08-06T11:00:00Z",
+      "keywords_hint": ["btc", "fed"]
+    }
+  ]
+}

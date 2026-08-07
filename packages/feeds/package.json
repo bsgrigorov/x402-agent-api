@@ -1,0 +1,20 @@
+{
+  "name": "@x402-agent-api/feeds",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit",
+    "test": "echo 'no feeds unit tests yet'"
+  },
+  "dependencies": {
+    "@x402-agent-api/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

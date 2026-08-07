@@ -1,0 +1,49 @@
+{
+  "name": "x402-agent-api",
+  // Personal Cloudflare account (brslv). Not a secret — pins deploy target.
+  "account_id": "68dc41440ae5da6f6c21bfb160a117a5",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "env": {
+    "dev": {
+      "name": "x402-agent-api-dev",
+      "vars": {
+        "NETWORK": "ALGORAND_Testnet_CAIP2",
+        "BRIEF_PRICE_USDC": "0.05",
+        "FACILITATOR_URL": "https://facilitator.goplausible.xyz"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "x402-agent-api-dev",
+          "database_id": "00000000-0000-0000-0000-000000000001",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "triggers": {
+        "crons": ["0 */1 * * *"]
+      }
+    },
+    "prod": {
+      "name": "x402-agent-api-prod",
+      "routes": [{ "pattern": "x402.darkhold.dev", "custom_domain": true }],
+      "vars": {
+        "NETWORK": "ALGORAND_Mainnet_CAIP2",
+        "BRIEF_PRICE_USDC": "0.05",
+        "FACILITATOR_URL": "https://facilitator.goplausible.xyz"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "x402-agent-api-prod",
+          "database_id": "REPLACE_AFTER_WRANGLER_D1_CREATE",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "triggers": {
+        "crons": ["0 */1 * * *"]
+      }
+    }
+  }
+}
