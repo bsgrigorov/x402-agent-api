@@ -22,30 +22,30 @@ GoPlausible is **permissionless for verify/settle**: no merchant signup, API key
 ```mermaid
 sequenceDiagram
   autonumber
-  participant C as Client (payer wallet)
-  participant M as Merchant Worker<br/>x402-agent-api
+  participant C as Client / payer wallet
+  participant M as Merchant Worker
   participant F as GoPlausible Facilitator
   participant A as Algorand + USDC ASA
-  participant D as D1 (items/ledger)
+  participant D as D1 items / ledger
 
-  C->>M: POST /v1/brief (no payment)
-  M-->>C: 402 + PAYMENT-REQUIRED<br/>(payTo, network, amount, asset, tag)
+  C->>M: POST /v1/brief unpaid
+  M-->>C: 402 + PAYMENT-REQUIRED
 
-  Note over C: Client builds Exact AVM payment<br/>matching accepts[] (signs with payer key)
+  Note over C: Client builds Exact AVM payment matching accepts[]
 
-  C->>M: POST /v1/brief + PAYMENT-SIGNATURE / x-payment
-  M->>F: POST /verify (payload + requirements)
-  F->>A: Check signed group / requirements
+  C->>M: POST /v1/brief + PAYMENT-SIGNATURE
+  M->>F: POST /verify
+  F->>A: Check signed group vs requirements
   F-->>M: verify ok / fail
 
   alt verify fail
     M-->>C: 402 again
   else verify ok
-    M->>D: build extractive brief (query items)
-    M->>F: POST /settle (payload + requirements)
-    F->>A: Submit / confirm USDC transfer<br/>(payer → payTo; feePayer may sponsor fees)
+    M->>D: build extractive brief
+    M->>F: POST /settle
+    F->>A: Submit USDC payer to payTo
     F-->>M: settle success + tx id
-    M->>D: append revenue_events (+ cost_events)
+    M->>D: append revenue_events
     M-->>C: 200 brief JSON + PAYMENT-RESPONSE
   end
 ```
