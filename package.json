@@ -13,9 +13,17 @@
     "deploy:dev": "pnpm --filter @x402-agent-api/api deploy:dev",
     "deploy:prod": "pnpm --filter @x402-agent-api/api deploy:prod",
     "db:migrate:local": "pnpm --filter @x402-agent-api/api db:migrate:local",
-    "hydrate": "tsx scripts/hydrate.ts"
+    "hydrate": "tsx scripts/hydrate.ts",
+    "wallets:generate": "tsx scripts/generate-wallets.ts",
+    "wallets:new-payer": "tsx scripts/rotate-payer.ts",
+    "wallets:opt-in": "tsx scripts/opt-in-usdc.ts",
+    "wallets:check": "tsx scripts/check-accounts.ts",
+    "e2e:pay-brief": "tsx scripts/e2e-pay-brief.ts"
   },
   "devDependencies": {
+    "@x402/avm": "2.21.0",
+    "@x402/fetch": "2.21.0",
+    "algosdk": "3.5.2",
     "tsx": "4.20.5",
     "turbo": "2.9.16",
     "typescript": "5.9.3",

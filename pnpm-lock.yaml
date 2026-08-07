@@ -8,6 +8,15 @@ importers:
 
   .:
     devDependencies:
+      '@x402/avm':
+        specifier: 2.21.0
+        version: 2.21.0
+      '@x402/fetch':
+        specifier: 2.21.0
+        version: 2.21.0
+      algosdk:
+        specifier: 3.5.2
+        version: 3.5.2
       tsx:
         specifier: 4.20.5
         version: 4.20.5
@@ -960,6 +969,9 @@ packages:
 
   '@x402/extensions@2.21.0':
     resolution: {integrity: sha512-0cZTRVtnWUUsp9KxBvbMERtLKo+57Ru1IhbAHtpgNdK08/LJWtK6CpqM4wgta8nMPth3jMvB/PdS3OdNaEPaBQ==}
+
+  '@x402/fetch@2.21.0':
+    resolution: {integrity: sha512-LEiJ8jjb8fmCNgF1yMjLoVRtrg8gtb/zJgBDLW7t/KPbntDDqgru+nd1OLU1qyyp9D2I7ULYP420eHVyAVZ12w==}
 
   '@x402/hono@2.21.0':
     resolution: {integrity: sha512-5OjD+jh0p0W4TvTmcwxYkRKfwgzldLE9PomOnVls6Gq6fsYYdajHuDxd8ZQXb8m9S/3JwOYK3Ay8v2hLv/Mv4A==}
@@ -2054,6 +2066,10 @@ snapshots:
       - ethers
       - typescript
       - utf-8-validate
+
+  '@x402/fetch@2.21.0':
+    dependencies:
+      '@x402/core': 2.21.0
 
   '@x402/hono@2.21.0(ethers@6.17.0)(hono@4.13.0)(typescript@5.9.3)':
     dependencies:

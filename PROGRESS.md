@@ -22,7 +22,9 @@ Created merchant + payer. **Keys not in git.**
 | Role | Address |
 |------|---------|
 | Merchant (`PAY_TO`) | `BQ3VHAHIZ2LVHS3RPGWTX4JWFJ2WFH5USQOCRIJFKTQ7XUREEKJB5NGPCY` |
-| Payer (client E2E) | `L7UAGJP3HMITVMOAKIMF35EIYSWUQUVKEGGPP2ZJYBJ47IR5HJK2ABKDJU` |
+| Payer (client E2E) | `JWDOA6JEA4KOGBX6AOHROPJICSFWOXTOZ5AHB4QNZRTJ72VGCKFDV3SWNE` |
+
+Payer rotated 2026-08-07 (old `L7UAGJP3…` retired after Circle send before opt-in). Merchant unchanged.
 
 Secrets:
 
@@ -57,14 +59,16 @@ Secrets:
 - [x] Local smoke: health / 402 / bypass brief
 - [x] Confirm Worker HTTPS after WARP off
 - [x] Generate Testnet merchant + payer wallets; store privately; wire `PAY_TO`
+- [x] Opt both accounts into USDC ASA `10458941` (merchant + payer); balances still 0 USDC
+- [x] Ops scripts + runbook: `scripts/{generate-wallets,opt-in-usdc,check-accounts,hydrate}.ts`, `scripts/README.md`
+- [x] Paid E2E local: `pnpm e2e:pay-brief` → settle OK + brief 200 (tx `TZ5GGUCQ…`)
+- [x] `PROTOCOL.md` control-flow + facilitator trust model
+- [x] Remote D1 `x402-agent-api-dev` + migrate; secrets `PAY_TO`/`INGEST_TOKEN`; deploy
+- [x] Remote smoke (IPv4): `GET /health` → 200, unpaid `POST /v1/brief` → **402**
+- [x] Remote hydrate + paid E2E on darkhold.workers.dev
+  - settle tx `GRIG2RW4MTCY3SHRG7FSEDAAS4GTC2RVYQXOLIXFL5MG2SIKH4OQ`, brief **200**
 
 ### Next
 
-- [ ] Fund both wallets with Testnet ALGO (https://lora.algokit.io/testnet/fund)
-- [ ] Fund payer with Testnet USDC ASA `10458941` (Circle faucet); merchant opt-in to USDC
-- [ ] Restart wrangler; confirm 402 `payTo` is merchant address
-- [ ] Paid E2E: client pays → GoPlausible verify/settle → brief 200 (no bypass)
-- [ ] Create remote D1 for `dev` / `prod`; replace prod placeholder id
-- [ ] Deploy `dev` to workers.dev
 - [ ] Re-enable bazaar discovery once Workers-safe (no Ajv codegen)
-- [ ] Register for challenge; Mainnet only after Testnet E2E
+- [ ] Register for challenge; Mainnet only after custom domain / Mainnet wallets

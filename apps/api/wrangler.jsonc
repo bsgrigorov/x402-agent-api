@@ -4,10 +4,11 @@
   "account_id": "68dc41440ae5da6f6c21bfb160a117a5",
   "main": "src/index.ts",
   "compatibility_date": "2026-08-01",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "env": {
     "dev": {
       "name": "x402-agent-api-dev",
+      "workers_dev": true,
       "vars": {
         "NETWORK": "ALGORAND_Testnet_CAIP2",
         "BRIEF_PRICE_USDC": "0.05",
@@ -17,7 +18,7 @@
         {
           "binding": "DB",
           "database_name": "x402-agent-api-dev",
-          "database_id": "00000000-0000-0000-0000-000000000001",
+          "database_id": "2ddb556a-199c-434f-b3b8-b615ecd76cf2",
           "migrations_dir": "migrations"
         }
       ],

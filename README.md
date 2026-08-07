@@ -13,10 +13,14 @@ Flagship product: **morning-brief** → `POST /v1/brief`.
 
 ```bash
 pnpm install
-cp dev.vars.example apps/api/.dev.vars   # set PAY_TO, tokens
+cp dev.vars.example apps/api/.dev.vars   # set tokens; PAY_TO from wallets:generate
+pnpm wallets:generate -- --force --write-dev-vars --vault   # once per env
+# fund ALGO → pnpm wallets:opt-in → fund payer USDC → pnpm wallets:check
 pnpm db:migrate:local
-pnpm --filter @x402-agent-api/api dev
+pnpm dev
 ```
+
+Wallet / opt-in / hydrate runbook: scripts/README.md
 
 Smoke:
 
@@ -51,3 +55,5 @@ pnpm deploy:dev    # Testnet
 ```
 
 Contest research: `~/dev/repos/kb/kb-projects/projects/algorand-x402-challenge/`.
+
+Protocol / trust model: [PROTOCOL.md](./PROTOCOL.md).

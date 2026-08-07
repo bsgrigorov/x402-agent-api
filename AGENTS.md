@@ -19,9 +19,14 @@ Cloudflare Workers monorepo for Algorand x402 paid agent endpoints.
 
 ```bash
 pnpm install
+pnpm wallets:generate -- --force --write-dev-vars --vault
+pnpm wallets:opt-in
+pnpm wallets:check
 pnpm db:migrate:local
-pnpm --filter @x402-agent-api/api dev
+pnpm dev
 pnpm typecheck
 ```
+
+Wallet / faucet / opt-in runbook: `scripts/README.md`.
 
 Envs: `dev` = Testnet / workers.dev · `prod` = Mainnet / `x402.darkhold.dev` only. See root README.
