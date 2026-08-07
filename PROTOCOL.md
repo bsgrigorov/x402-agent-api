@@ -175,7 +175,7 @@ Differences that matter:
 2. Worker writes `revenue_events` (and extractive `cost_events`) in D1.
 3. Response body is the morning-brief product; payment proof may also appear in settlement response headers.
 
-Replay / double-fulfill is a merchant concern (idempotency on payment/tx). Facilitator settle is the chain gate; D1 ledger is our metering mirror.
+Replay / double-fulfill: D1 `payment_claims` UNIQUE on sha256(`payment-signature` / `x-payment`). Replay → **409** before brief build. Key is the payment header hash because `@x402/hono` settles *after* the handler (settle tx id is not available yet). Facilitator settle remains the money gate; D1 ledger is the metering mirror.
 
 ---
 

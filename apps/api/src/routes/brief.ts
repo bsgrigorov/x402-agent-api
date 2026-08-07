@@ -1,9 +1,10 @@
 import { Hono } from "hono";
 import type { BriefRequest, SectionId } from "@x402-agent-api/shared";
-import { isSectionId } from "@x402-agent-api/shared";
+import { isSectionId, sha256Hex } from "@x402-agent-api/shared";
 import type { Env } from "../env";
 import { buildBrief } from "../brief/service";
 import { appendCost, appendRevenue } from "../store/ledger";
+import { claimPaymentKey } from "../store/payments";
 
 export const briefRoutes = new Hono<{ Bindings: Env }>();
 
@@ -44,6 +45,19 @@ briefRoutes.post("/v1/brief", async (c) => {
   const requestId = crypto.randomUUID();
   const now = Math.floor(Date.now() / 1000);
 
+  // Settle runs after this handler in @x402/hono, so lock on payment header hash
+  // (not settle tx). Bypass / unpaid paths have no header and skip the claim.
+  const paymentHeader =
+    c.req.header("payment-signature") ?? c.req.header("x-payment");
+  let paymentKey: string | null = null;
+  if (paymentHeader) {
+    paymentKey = await sha256Hex(paymentHeader);
+    const claimed = await claimPaymentKey(c.env.DB, paymentKey, requestId);
+    if (!claimed) {
+      return c.json({ error: "payment_already_used" }, 409);
+    }
+  }
+
   let brief;
   try {
     brief = await buildBrief(c.env.DB, req, priceUsdc);
@@ -59,7 +73,8 @@ briefRoutes.post("/v1/brief", async (c) => {
     sku: "brief",
     price_usdc: priceUsdc,
     payer: null,
-    tx_id: null,
+    // ponytail: store payment header hash until we plumb settle tx id post-handler
+    tx_id: paymentKey,
     network: c.env.NETWORK,
     settled_at: now,
   });

@@ -1,7 +1,8 @@
 # Copy to apps/api/.dev.vars for `wrangler dev`
 PAY_TO=YOUR_ALGORAND_TESTNET_ADDRESS
 FACILITATOR_URL=https://facilitator.goplausible.xyz
-INGEST_TOKEN=change-me-local-ingest-token
+# openssl rand -hex 32  (≥32 chars required by /internal/ingest)
+INGEST_TOKEN=
 # Local-only unpaid bypass for extractive smoke tests (never set on Mainnet prod)
 DEV_BYPASS_SECRET=change-me-local-bypass
 BRIEF_PRICE_USDC=0.05

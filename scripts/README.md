@@ -99,10 +99,12 @@ curl -s -X POST http://127.0.0.1:8787/v1/brief \
 # → 402; PAYMENT-REQUIRED.payTo must equal merchant address
 ```
 
-Hydrate sample items (optional, for extractive brief):
+Hydrate sample items (optional, for extractive brief). Token must be ≥32 chars
+(`openssl rand -hex 32`); same value in `.dev.vars` and `wrangler secret`:
 
 ```bash
-INGEST_TOKEN=local-ingest-token BASE_URL=http://127.0.0.1:8787 \
+INGEST_TOKEN="$(grep '^INGEST_TOKEN=' apps/api/.dev.vars | cut -d= -f2-)" \
+BASE_URL=http://127.0.0.1:8787 \
   pnpm hydrate -- --file ./scripts/seed.example.json
 ```
 
@@ -110,7 +112,8 @@ INGEST_TOKEN=local-ingest-token BASE_URL=http://127.0.0.1:8787 \
 
 ```bash
 # ensure pnpm dev is running, then:
-INGEST_TOKEN=local-ingest-token BASE_URL=http://127.0.0.1:8787 \
+INGEST_TOKEN="$(grep '^INGEST_TOKEN=' apps/api/.dev.vars | cut -d= -f2-)" \
+BASE_URL=http://127.0.0.1:8787 \
   pnpm hydrate -- --file ./scripts/seed.example.json
 pnpm e2e:pay-brief
 ```

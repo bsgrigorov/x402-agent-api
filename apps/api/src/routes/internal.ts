@@ -3,6 +3,7 @@ import type { FeedItem, SectionId } from "@x402-agent-api/shared";
 import { isSectionId, sanitizeFeedText, sha256Hex } from "@x402-agent-api/shared";
 import type { Env } from "../env";
 import { upsertItems } from "../store/items";
+import { bearerOk } from "./internal_auth";
 
 export const internalRoutes = new Hono<{ Bindings: Env }>();
 
@@ -17,12 +18,6 @@ type IngestBody = {
     keywords_hint?: string[];
   }>;
 };
-
-function bearerOk(header: string | undefined, token: string): boolean {
-  if (!header) return false;
-  const [scheme, value] = header.split(" ");
-  return scheme?.toLowerCase() === "bearer" && value === token;
-}
 
 internalRoutes.post("/internal/ingest", async (c) => {
   if (!bearerOk(c.req.header("authorization"), c.env.INGEST_TOKEN)) {

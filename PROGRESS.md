@@ -65,8 +65,8 @@ Secrets:
 - [x] `PROTOCOL.md` control-flow + facilitator trust model
 - [x] Remote D1 `x402-agent-api-dev` + migrate; secrets `PAY_TO`/`INGEST_TOKEN`; deploy
 - [x] Remote smoke (IPv4): `GET /health` → 200, unpaid `POST /v1/brief` → **402**
-- [x] Remote hydrate + paid E2E on darkhold.workers.dev
-  - settle tx `GRIG2RW4MTCY3SHRG7FSEDAAS4GTC2RVYQXOLIXFL5MG2SIKH4OQ`, brief **200**
+- [x] Replay reject: `payment_claims` UNIQUE on payment-header hash → **409**
+- [x] Harden `INGEST_TOKEN` (≥32 + timing-safe compare); rotated local + CF `dev`
 
 ### Next
 
