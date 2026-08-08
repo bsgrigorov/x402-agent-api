@@ -8,7 +8,7 @@
     "noEmit": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "resolveJsonModule": true
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts", "sources.wave1.json"]
+  "include": ["src/**/*.ts"]
 }

@@ -117,7 +117,7 @@ export function createPaymentMiddleware(env: Env): MiddlewareHandler {
     "POST /v1/brief": {
       accepts: [briefAccept],
       description:
-        "Keyword-filtered multi-section intel brief with source links (extractive; citations from retrieved feed items)",
+        "Keyword-filtered multi-topic intel brief with source links (extractive; citations from retrieved feed items)",
       mimeType: "application/json",
     },
   };

@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import type { BriefRequest, SectionId } from "@x402-agent-api/shared";
-import { isSectionId, sha256Hex } from "@x402-agent-api/shared";
+import type { BriefRequest, TopicId } from "@x402-agent-api/shared";
+import { isTopicId, sha256Hex } from "@x402-agent-api/shared";
 import type { Env } from "../env";
 import { buildBrief } from "../brief/service";
 import { appendCost, appendRevenue } from "../store/ledger";
@@ -16,20 +16,27 @@ function parseBody(raw: unknown): BriefRequest {
   const keywords = Array.isArray(body.keywords)
     ? body.keywords.filter((k): k is string => typeof k === "string")
     : [];
-  const sectionsRaw = Array.isArray(body.sections) ? body.sections : [];
-  const sections = sectionsRaw.filter(
-    (s): s is SectionId => typeof s === "string" && isSectionId(s),
+  // Accept topics (new) or sections (legacy alias during cutover)
+  const topicsRaw = Array.isArray(body.topics)
+    ? body.topics
+    : Array.isArray(body.sections)
+      ? body.sections
+      : [];
+  const topics = topicsRaw.filter(
+    (s): s is TopicId => typeof s === "string" && isTopicId(s),
   );
-  if (sections.length === 0) {
-    throw new Error("sections must include at least one known section id");
+  if (topics.length === 0) {
+    throw new Error("topics must include at least one known topic id");
   }
   const format = body.format === "json" ? "json" : "markdown";
   const max =
-    typeof body.max_items_per_section === "number"
-      ? body.max_items_per_section
-      : undefined;
+    typeof body.max_items_per_topic === "number"
+      ? body.max_items_per_topic
+      : typeof body.max_items_per_section === "number"
+        ? body.max_items_per_section
+        : undefined;
   const synthesize = body.synthesize === true;
-  return { keywords, sections, format, max_items_per_section: max, synthesize };
+  return { keywords, topics, format, max_items_per_topic: max, synthesize };
 }
 
 briefRoutes.post("/v1/brief", async (c) => {
@@ -45,8 +52,6 @@ briefRoutes.post("/v1/brief", async (c) => {
   const requestId = crypto.randomUUID();
   const now = Math.floor(Date.now() / 1000);
 
-  // Settle runs after this handler in @x402/hono, so lock on payment header hash
-  // (not settle tx). Bypass / unpaid paths have no header and skip the claim.
   const paymentHeader =
     c.req.header("payment-signature") ?? c.req.header("x-payment");
   let paymentKey: string | null = null;
@@ -66,7 +71,6 @@ briefRoutes.post("/v1/brief", async (c) => {
     return c.json({ error: message }, 400);
   }
 
-  // Metering after successful assemble (payment already verified by x402 middleware).
   await appendRevenue(c.env.DB, {
     id: crypto.randomUUID(),
     request_id: requestId,

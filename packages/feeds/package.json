@@ -11,6 +11,7 @@
     "test": "echo 'no feeds unit tests yet'"
   },
   "dependencies": {
+    "@x402-agent-api/aggregator": "workspace:*",
     "@x402-agent-api/shared": "workspace:*"
   },
   "devDependencies": {

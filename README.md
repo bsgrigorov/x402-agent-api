@@ -28,23 +28,29 @@ Smoke:
 curl -s http://127.0.0.1:8787/health
 curl -s -X POST http://127.0.0.1:8787/v1/brief \
   -H 'content-type: application/json' \
-  -d '{"keywords":["kubernetes"],"sections":["tech"]}'
+  -d '{"keywords":["kubernetes"],"topics":["tech"]}'
 # → 402 without payment
 
 # With local bypass (Testnet / .dev.vars only):
 curl -s -X POST http://127.0.0.1:8787/v1/brief \
   -H 'content-type: application/json' \
   -H "x-dev-bypass: $DEV_BYPASS_SECRET" \
-  -d '{"keywords":["kubernetes"],"sections":["tech"]}'
+  -d '{"keywords":["kubernetes"],"topics":["tech"]}'
 ```
 
-Seed items:
+Seed items / trigger Wave1 ingest:
 
 ```bash
 curl -s -X POST http://127.0.0.1:8787/internal/ingest \
   -H "authorization: Bearer $INGEST_TOKEN" \
   -H 'content-type: application/json' \
-  -d '{"items":[{"url":"https://example.com/a","title":"K8s CVE demo","summary":"Sample","source":"demo","section":"tech","published_at":"2026-08-06T12:00:00Z"}]}'
+  -d '{"items":[{"url":"https://example.com/a","title":"K8s CVE demo","summary":"Sample","source":"demo","topic":"tech","published_at":"2026-08-06T12:00:00Z"}]}'
+
+# Live fetch+normalize+upsert (quotes+feeds):
+curl -s -X POST http://127.0.0.1:8787/internal/run-ingest \
+  -H "authorization: Bearer $INGEST_TOKEN" \
+  -H 'content-type: application/json' \
+  -d '{"job":"hourly"}'
 ```
 
 ## Deploy

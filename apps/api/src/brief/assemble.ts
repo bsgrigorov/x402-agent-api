@@ -1,14 +1,18 @@
-import type { BriefItem, BriefResponse, FeedItem, SectionId } from "@x402-agent-api/shared";
+import type { BriefItem, BriefResponse, FeedItem, TopicId } from "@x402-agent-api/shared";
 
 function iso(sec: number): string {
   return new Date(sec * 1000).toISOString();
 }
 
 function toBriefItem(item: FeedItem): BriefItem {
+  const summary =
+    item.kind === "quote" && item.payload && item.payload !== "{}"
+      ? `${item.summary || item.title} · ${item.payload}`
+      : item.summary || item.title;
   return {
     headline: item.title,
-    summary: item.summary || item.title,
-    why_it_matters: `Matched source ${item.source} (${item.section}).`,
+    summary,
+    why_it_matters: `Matched source ${item.source} (${item.topic}).`,
     references: [
       {
         title: item.title,
@@ -19,15 +23,15 @@ function toBriefItem(item: FeedItem): BriefItem {
   };
 }
 
-function toMarkdown(sections: BriefResponse["sections"]): string {
+function toMarkdown(topics: BriefResponse["topics"]): string {
   const parts: string[] = [`# Morning brief`, ``];
-  for (const section of sections) {
-    parts.push(`## ${section.id}`, ``);
-    if (section.items.length === 0) {
+  for (const topic of topics) {
+    parts.push(`## ${topic.id}`, ``);
+    if (topic.items.length === 0) {
       parts.push(`_No matching items._`, ``);
       continue;
     }
-    for (const item of section.items) {
+    for (const item of topic.items) {
       parts.push(`### ${item.headline}`, ``);
       parts.push(item.summary, ``);
       parts.push(`- Why: ${item.why_it_matters}`);
@@ -41,22 +45,22 @@ function toMarkdown(sections: BriefResponse["sections"]): string {
 }
 
 export function assembleExtractive(args: {
-  bySection: Map<SectionId, FeedItem[]>;
+  byTopic: Map<TopicId, FeedItem[]>;
   priceUsdc: number;
   storeAgeS: number | null;
 }): BriefResponse {
-  const sections: BriefResponse["sections"] = [];
+  const topics: BriefResponse["topics"] = [];
   let sources = 0;
-  for (const [id, items] of args.bySection) {
+  for (const [id, items] of args.byTopic) {
     const briefItems = items.map(toBriefItem);
     sources += briefItems.length;
-    sections.push({ id, items: briefItems });
+    topics.push({ id, items: briefItems });
   }
 
   return {
     generated_at: new Date().toISOString(),
-    brief_markdown: toMarkdown(sections),
-    sections,
+    brief_markdown: toMarkdown(topics),
+    topics,
     meta: {
       model: "extractive",
       sources_used: sources,

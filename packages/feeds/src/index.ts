@@ -1,38 +1,21 @@
-import type { SectionId } from "@x402-agent-api/shared";
+import type { TopicId } from "@x402-agent-api/shared";
+import { parseRegistryJson, type SourceDef } from "@x402-agent-api/aggregator";
+import wave1 from "../sources.wave1.json";
 
-export type FeedDef = {
-  id: string;
-  section: SectionId;
-  url: string;
-  /** Human label for meta / debugging */
-  label: string;
-};
+/** Wave 1 allowlist — same registry as source-analysis. */
+export const WAVE1_SOURCES: readonly SourceDef[] = parseRegistryJson(
+  wave1 as { sources: Array<Record<string, unknown>> },
+);
 
-/**
- * Service-owned allowlist. Public RSS only; expand carefully (ToS).
- * Port patterns from KB morning-brief — do not mount the KB at runtime.
- */
-export const FEED_ALLOWLIST: readonly FeedDef[] = [
-  {
-    id: "hn-frontpage",
-    section: "tech",
-    url: "https://hnrss.org/frontpage",
-    label: "Hacker News",
-  },
-  {
-    id: "bleepingcomputer",
-    section: "security",
-    url: "https://www.bleepingcomputer.com/feed/",
-    label: "BleepingComputer",
-  },
-  {
-    id: "coindesk",
-    section: "crypto",
-    url: "https://www.coindesk.com/arc/outboundfeeds/rss/",
-    label: "CoinDesk",
-  },
-] as const;
+/** @deprecated use WAVE1_SOURCES */
+export const FEED_ALLOWLIST = WAVE1_SOURCES;
 
-export function feedsForSection(section: SectionId): FeedDef[] {
-  return FEED_ALLOWLIST.filter((f) => f.section === section);
+export type FeedDef = SourceDef;
+
+export function feedsForTopic(topic: TopicId): SourceDef[] {
+  return WAVE1_SOURCES.filter((f) => f.topic === topic);
+}
+
+export function feedsForJob(job: NonNullable<SourceDef["job"]>): SourceDef[] {
+  return WAVE1_SOURCES.filter((f) => f.job === job);
 }

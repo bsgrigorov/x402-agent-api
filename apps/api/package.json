@@ -12,6 +12,7 @@
     "db:migrate:local": "wrangler d1 migrations apply DB --local --env=dev"
   },
   "dependencies": {
+    "@x402-agent-api/aggregator": "workspace:*",
     "@x402-agent-api/feeds": "workspace:*",
     "@x402-agent-api/shared": "workspace:*",
     "@x402-avm/extensions": "2.6.1",

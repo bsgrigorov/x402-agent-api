@@ -5,7 +5,7 @@ import { getPaymentMiddleware } from "./x402/middleware";
 import { healthRoutes } from "./routes/health";
 import { briefRoutes } from "./routes/brief";
 import { internalRoutes } from "./routes/internal";
-import { aggregateFeeds } from "./cron/aggregate";
+import { runHourlyIngest, runIngestJob } from "./cron/ingest";
 import { cleanupOldItems } from "./cron/cleanup";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -30,7 +30,7 @@ app.get("/llms.txt", (c) => {
       "# x402-agent-api",
       "",
       "Paid Algorand x402 agent endpoints.",
-      "Flagship: POST /v1/brief — keyword multi-section intel brief with citations.",
+      "Flagship: POST /v1/brief — keyword multi-topic intel brief with citations.",
       "Facilitator: GoPlausible. Tag: x402-global-challenge.",
       "",
     ].join("\n"),
@@ -50,8 +50,6 @@ app.get("/.well-known/x402.json", (c) => {
 app.route("/", healthRoutes);
 app.route("/", internalRoutes);
 
-// Payment gate applies to subsequent paid product routes only.
-// Middleware is cached per isolate (see getPaymentMiddleware).
 app.use("*", async (c, next) => {
   const path = new URL(c.req.url).pathname;
   if (path === "/v1/brief") {
@@ -67,14 +65,34 @@ app.onError((err, c) => {
   return c.json({ error: "internal_error" }, 500);
 });
 
+/** Cron strings must match wrangler.jsonc triggers. */
+const CRON_HOURLY = "0 * * * *";
+const CRON_TLDR = "0 */6 * * *";
+const CRON_CLEANUP = "15 5 * * *";
+
 export default {
   fetch: app.fetch,
-  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext) {
+  async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext) {
+    const cron = controller.cron;
     ctx.waitUntil(
       (async () => {
-        const agg = await aggregateFeeds(env);
-        const deleted = await cleanupOldItems(env);
-        console.log("cron", { ...agg, deleted });
+        if (cron === CRON_CLEANUP) {
+          const deleted = await cleanupOldItems(env);
+          console.log("cron cleanup", { deleted });
+          return;
+        }
+        if (cron === CRON_TLDR) {
+          const tldr = await runIngestJob(env, "tldr");
+          console.log("cron tldr", tldr);
+          return;
+        }
+        // Default / hourly: quotes + feeds
+        if (cron === CRON_HOURLY || !cron) {
+          const hourly = await runHourlyIngest(env);
+          console.log("cron hourly", hourly);
+          return;
+        }
+        console.log("cron unknown", { cron });
       })(),
     );
   },

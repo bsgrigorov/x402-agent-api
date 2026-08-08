@@ -1,7 +1,7 @@
-import type { BriefRequest, BriefResponse, SectionId } from "@x402-agent-api/shared";
+import type { BriefRequest, BriefResponse, TopicId } from "@x402-agent-api/shared";
 import { assembleExtractive } from "./assemble";
 import { filterAndRank } from "./filter";
-import { newestIngestedAt, querySectionCandidates } from "../store/items";
+import { newestIngestedAt, queryQuotes, queryTopicCandidates } from "../store/items";
 
 /**
  * Morning-brief product entrypoint — no HTTP, no x402.
@@ -16,17 +16,23 @@ export async function buildBrief(
     throw new Error("synthesize is disabled until metering + LLM budget are live");
   }
 
-  const max = Math.min(Math.max(req.max_items_per_section ?? 5, 1), 20);
-  const bySection = new Map<SectionId, ReturnType<typeof filterAndRank>>();
+  const max = Math.min(Math.max(req.max_items_per_topic ?? 5, 1), 20);
+  const byTopic = new Map<TopicId, ReturnType<typeof filterAndRank>>();
 
-  for (const section of req.sections) {
-    const candidates = await querySectionCandidates(db, section);
-    bySection.set(section, filterAndRank(candidates, req.keywords, max));
+  for (const topic of req.topics) {
+    if (topic === "markets") {
+      // Markets brief block uses quote rows (prices), not articles.
+      const quotes = await queryQuotes(db, max);
+      byTopic.set(topic, quotes.slice(0, max));
+      continue;
+    }
+    const candidates = await queryTopicCandidates(db, topic);
+    byTopic.set(topic, filterAndRank(candidates, req.keywords, max));
   }
 
   const newest = await newestIngestedAt(db);
   const storeAgeS =
     newest == null ? null : Math.max(0, Math.floor(Date.now() / 1000) - newest);
 
-  return assembleExtractive({ bySection, priceUsdc, storeAgeS });
+  return assembleExtractive({ byTopic, priceUsdc, storeAgeS });
 }

@@ -8,10 +8,13 @@ const base: FeedItem = {
   title: "Kubernetes CVE patch",
   summary: "Cluster admins should upgrade",
   source: "demo",
-  section: "tech",
+  topic: "tech",
+  kind: "article",
   published_at: 1_700_000_000,
   ingested_at: 1_700_000_100,
+  external_id: "",
   keywords_hint: ["kubernetes"],
+  payload: "{}",
 };
 
 describe("filterAndRank", () => {

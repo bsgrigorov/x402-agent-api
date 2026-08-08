@@ -1,0 +1,390 @@
+{
+  "notes": "Frozen Wave 1 allowlist 2026-08-07. TLDR sources use expand=tldr-html in aggregator.",
+  "sources": [
+    {
+      "id": "bbc-world",
+      "topic": "world",
+      "kind": "rss",
+      "label": "BBC World",
+      "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "tier": "A"
+    },
+    {
+      "id": "aljazeera",
+      "topic": "world",
+      "kind": "rss",
+      "label": "Al Jazeera",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "tier": "A"
+    },
+    {
+      "id": "axios",
+      "topic": "world",
+      "kind": "rss",
+      "label": "Axios",
+      "url": "https://api.axios.com/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "yahoo-finance-news",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "Yahoo Finance news",
+      "url": "https://finance.yahoo.com/news/rssindex",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "marketwatch-top",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "MarketWatch top stories",
+      "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories",
+      "tier": "A"
+    },
+    {
+      "id": "morningbrew",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "Morning Brew stories",
+      "url": "https://www.morningbrew.com/feed",
+      "tier": "A"
+    },
+    {
+      "id": "banking-dive",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "Banking Dive",
+      "url": "https://www.bankingdive.com/feeds/news/",
+      "tier": "A"
+    },
+    {
+      "id": "fred-blog",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "FRED Blog",
+      "url": "https://fredblog.stlouisfed.org/feed/",
+      "tier": "A",
+      "max_age_hours": 168
+    },
+    {
+      "id": "sec-press",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "SEC press releases",
+      "url": "https://www.sec.gov/news/pressreleases.rss",
+      "tier": "A",
+      "max_age_hours": 168
+    },
+    {
+      "id": "tldr-fintech",
+      "topic": "finance",
+      "kind": "rss",
+      "label": "TLDR Fintech",
+      "url": "https://tldr.tech/api/rss/fintech",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "coindesk",
+      "topic": "crypto",
+      "kind": "rss",
+      "label": "CoinDesk",
+      "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+      "tier": "A"
+    },
+    {
+      "id": "theblock",
+      "topic": "crypto",
+      "kind": "rss",
+      "label": "The Block",
+      "url": "https://www.theblock.co/rss.xml",
+      "tier": "A"
+    },
+    {
+      "id": "decrypt",
+      "topic": "crypto",
+      "kind": "rss",
+      "label": "Decrypt",
+      "url": "https://decrypt.co/feed",
+      "tier": "A"
+    },
+    {
+      "id": "tldr-crypto",
+      "topic": "crypto",
+      "kind": "rss",
+      "label": "TLDR Crypto (probe)",
+      "url": "https://tldr.tech/api/rss/crypto",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "bleeping",
+      "topic": "security",
+      "kind": "rss",
+      "label": "BleepingComputer",
+      "url": "https://www.bleepingcomputer.com/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "therecord",
+      "topic": "security",
+      "kind": "rss",
+      "label": "The Record",
+      "url": "https://therecord.media/feed",
+      "tier": "A"
+    },
+    {
+      "id": "sans-isc",
+      "topic": "security",
+      "kind": "rss",
+      "label": "SANS ISC",
+      "url": "https://isc.sans.edu/rssfeed_full.xml",
+      "tier": "A"
+    },
+    {
+      "id": "socket",
+      "topic": "security",
+      "kind": "atom",
+      "label": "Socket.dev blog",
+      "url": "https://socket.dev/api/blog/feed.atom",
+      "tier": "A"
+    },
+    {
+      "id": "gh-advisories",
+      "topic": "security",
+      "kind": "json-api",
+      "label": "GitHub Advisories",
+      "url": "https://api.github.com/advisories?per_page=20",
+      "tier": "A",
+      "headers": {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+      }
+    },
+    {
+      "id": "cybersecurity-dive",
+      "topic": "security",
+      "kind": "rss",
+      "label": "Cybersecurity Dive (probe)",
+      "url": "https://www.cybersecuritydive.com/feeds/news/",
+      "tier": "A"
+    },
+    {
+      "id": "cisa-alerts",
+      "topic": "security",
+      "kind": "rss",
+      "label": "CISA alerts",
+      "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+      "tier": "A"
+    },
+    {
+      "id": "krebs",
+      "topic": "security",
+      "kind": "rss",
+      "label": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "tldr-infosec",
+      "topic": "security",
+      "kind": "rss",
+      "label": "TLDR InfoSec",
+      "url": "https://tldr.tech/api/rss/infosec",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "hn-frontpage",
+      "topic": "tech",
+      "kind": "rss",
+      "label": "Hacker News frontpage",
+      "url": "https://hnrss.org/frontpage",
+      "tier": "A"
+    },
+    {
+      "id": "ars",
+      "topic": "tech",
+      "kind": "rss",
+      "label": "Ars Technica",
+      "url": "https://feeds.arstechnica.com/arstechnica/index",
+      "tier": "A"
+    },
+    {
+      "id": "tldr-tech",
+      "topic": "tech",
+      "kind": "rss",
+      "label": "TLDR Tech (probe)",
+      "url": "https://tldr.tech/api/rss/tech",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "cloudflare-blog",
+      "topic": "infra",
+      "kind": "rss",
+      "label": "Cloudflare Blog",
+      "url": "https://blog.cloudflare.com/rss/",
+      "tier": "A"
+    },
+    {
+      "id": "cncf-blog",
+      "topic": "infra",
+      "kind": "rss",
+      "label": "CNCF blog (probe)",
+      "url": "https://www.cncf.io/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "github-changelog",
+      "topic": "infra",
+      "kind": "atom",
+      "label": "GitHub Changelog (probe)",
+      "url": "https://github.blog/changelog/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "aws-blog",
+      "topic": "infra",
+      "kind": "rss",
+      "label": "AWS Blog",
+      "url": "https://aws.amazon.com/blogs/aws/feed/",
+      "tier": "A"
+    },
+    {
+      "id": "tldr-devops",
+      "topic": "infra",
+      "kind": "rss",
+      "label": "TLDR DevOps",
+      "url": "https://tldr.tech/api/rss/devops",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "openai-blog",
+      "topic": "ai",
+      "kind": "rss",
+      "label": "OpenAI blog",
+      "url": "https://openai.com/blog/rss.xml",
+      "tier": "A"
+    },
+    {
+      "id": "tldr-ai",
+      "topic": "ai",
+      "kind": "rss",
+      "label": "TLDR AI (probe)",
+      "url": "https://tldr.tech/api/rss/ai",
+      "tier": "A",
+      "expand": "tldr-html"
+    },
+    {
+      "id": "huggingface-blog",
+      "topic": "ai",
+      "kind": "rss",
+      "label": "Hugging Face blog (probe)",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "tier": "A"
+    },
+    {
+      "id": "deepmind-blog",
+      "topic": "ai",
+      "kind": "rss",
+      "label": "Google DeepMind blog",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "tier": "A"
+    },
+    {
+      "id": "coingecko-markets",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "CoinGecko markets",
+      "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&price_change_percentage=24h,7d",
+      "tier": "A"
+    },
+    {
+      "id": "coingecko-global",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "CoinGecko global",
+      "url": "https://api.coingecko.com/api/v3/global",
+      "tier": "A"
+    },
+    {
+      "id": "crypto-fng",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Crypto Fear & Greed",
+      "url": "https://api.alternative.me/fng/?limit=1",
+      "tier": "A"
+    },
+    {
+      "id": "yahoo-voo",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo Finance VOO",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/VOO?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "yahoo-qqq",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo QQQ",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "yahoo-vix",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo VIX",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "yahoo-tnx",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo 10Y",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "yahoo-gld",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo GLD",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/GLD?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "id": "yahoo-uso",
+      "topic": "markets",
+      "kind": "json-api",
+      "label": "Yahoo USO (oil)",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/USO?interval=1d&range=5d",
+      "tier": "A",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+      }
+    }
+  ]
+}

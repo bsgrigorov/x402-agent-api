@@ -42,7 +42,7 @@ async function main(): Promise<void> {
   const fetchPaid = wrapFetchWithPayment(fetch, client);
   const body = {
     keywords: ["kubernetes"],
-    sections: ["tech"],
+    topics: ["tech"],
     format: "json",
   };
 

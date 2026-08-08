@@ -1,5 +1,5 @@
-import type { FeedItem, SectionId } from "@x402-agent-api/shared";
-import { SECTION_FRESHNESS_S } from "@x402-agent-api/shared";
+import type { FeedItem, TopicId } from "@x402-agent-api/shared";
+import { TOPIC_FRESHNESS_S } from "@x402-agent-api/shared";
 
 type ItemRow = {
   id: string;
@@ -7,10 +7,13 @@ type ItemRow = {
   title: string;
   summary: string;
   source: string;
-  section: string;
+  topic: string;
+  kind: string;
   published_at: number;
   ingested_at: number;
+  external_id: string;
   keywords_hint: string;
+  payload: string;
 };
 
 function rowToItem(row: ItemRow): FeedItem {
@@ -29,30 +32,53 @@ function rowToItem(row: ItemRow): FeedItem {
     title: row.title,
     summary: row.summary,
     source: row.source,
-    section: row.section as SectionId,
+    topic: row.topic as TopicId,
+    kind: row.kind === "quote" ? "quote" : "article",
     published_at: row.published_at,
     ingested_at: row.ingested_at,
+    external_id: row.external_id ?? "",
     keywords_hint,
+    payload: row.payload ?? "{}",
   };
 }
 
-/** Newest-first candidates for one section within its freshness floor. */
-export async function querySectionCandidates(
+/** Newest-first candidates for one topic within its freshness floor. */
+export async function queryTopicCandidates(
   db: D1Database,
-  section: SectionId,
+  topic: TopicId,
   nowSec = Math.floor(Date.now() / 1000),
   limit = 200,
 ): Promise<FeedItem[]> {
-  const cutoff = nowSec - SECTION_FRESHNESS_S[section];
+  const cutoff = nowSec - TOPIC_FRESHNESS_S[topic];
   const { results } = await db
     .prepare(
-      `SELECT id, url, title, summary, source, section, published_at, ingested_at, keywords_hint
+      `SELECT id, url, title, summary, source, topic, kind, published_at, ingested_at,
+              external_id, keywords_hint, payload
        FROM items
-       WHERE section = ? AND published_at >= ?
+       WHERE topic = ? AND published_at >= ? AND kind = 'article'
        ORDER BY published_at DESC
        LIMIT ?`,
     )
-    .bind(section, cutoff, limit)
+    .bind(topic, cutoff, limit)
+    .all<ItemRow>();
+  return (results ?? []).map(rowToItem);
+}
+
+/** Latest market quotes (no freshness floor beyond retention). */
+export async function queryQuotes(
+  db: D1Database,
+  limit = 50,
+): Promise<FeedItem[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT id, url, title, summary, source, topic, kind, published_at, ingested_at,
+              external_id, keywords_hint, payload
+       FROM items
+       WHERE kind = 'quote'
+       ORDER BY source ASC
+       LIMIT ?`,
+    )
+    .bind(limit)
     .all<ItemRow>();
   return (results ?? []).map(rowToItem);
 }
@@ -63,16 +89,21 @@ export async function upsertItems(db: D1Database, items: FeedItem[]): Promise<nu
   for (const item of items) {
     const result = await db
       .prepare(
-        `INSERT INTO items (id, url, title, summary, source, section, published_at, ingested_at, keywords_hint)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO items (
+           id, url, title, summary, source, topic, kind,
+           published_at, ingested_at, external_id, keywords_hint, payload
+         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(url) DO UPDATE SET
            title = excluded.title,
            summary = excluded.summary,
            source = excluded.source,
-           section = excluded.section,
+           topic = excluded.topic,
+           kind = excluded.kind,
            published_at = excluded.published_at,
            ingested_at = excluded.ingested_at,
-           keywords_hint = excluded.keywords_hint`,
+           external_id = excluded.external_id,
+           keywords_hint = excluded.keywords_hint,
+           payload = excluded.payload`,
       )
       .bind(
         item.id,
@@ -80,10 +111,13 @@ export async function upsertItems(db: D1Database, items: FeedItem[]): Promise<nu
         item.title,
         item.summary,
         item.source,
-        item.section,
+        item.topic,
+        item.kind,
         item.published_at,
         item.ingested_at,
+        item.external_id,
         JSON.stringify(item.keywords_hint),
+        item.payload,
       )
       .run();
     if (result.success) written += 1;

@@ -95,7 +95,7 @@ Smoke:
 curl -s http://127.0.0.1:8787/health
 curl -s -X POST http://127.0.0.1:8787/v1/brief \
   -H 'content-type: application/json' \
-  -d '{"keywords":["kubernetes"],"sections":["tech"]}'
+  -d '{"keywords":["kubernetes"],"topics":["tech"]}'
 # → 402; PAYMENT-REQUIRED.payTo must equal merchant address
 ```
 
@@ -106,6 +106,12 @@ Hydrate sample items (optional, for extractive brief). Token must be ≥32 chars
 INGEST_TOKEN="$(grep '^INGEST_TOKEN=' apps/api/.dev.vars | cut -d= -f2-)" \
 BASE_URL=http://127.0.0.1:8787 \
   pnpm hydrate -- --file ./scripts/seed.example.json
+
+# Or live Wave1 ingest (quotes+feeds; use {"job":"tldr"} for TLDR expand):
+curl -s -X POST http://127.0.0.1:8787/internal/run-ingest \
+  -H "authorization: Bearer $INGEST_TOKEN" \
+  -H 'content-type: application/json' \
+  -d '{"job":"hourly"}'
 ```
 
 ### 7. Paid E2E

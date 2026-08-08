@@ -11,8 +11,9 @@ Cloudflare Workers monorepo for Algorand x402 paid agent endpoints.
 | `apps/api/src/brief` | Morning-brief domain logic (filter/assemble; no HTTP, no x402) |
 | `apps/api/src/routes` | HTTP handlers only — wire request ↔ domain ↔ store |
 | `apps/api/src/store` | D1 access (items + ledger) |
-| `apps/api/src/cron` | Aggregate + 8-week cleanup |
-| `packages/feeds` | Allowlisted feed registry |
+| `apps/api/src/cron` | Wave1 ingest (quotes/feeds/tldr) + 8-week cleanup |
+| `packages/aggregator` | Feed adapters + normalize gate (Workers-safe) |
+| `packages/feeds` | Wave1 allowlisted feed registry |
 | `packages/shared` | Shared types / untrusted-text helpers |
 
 ## Commands

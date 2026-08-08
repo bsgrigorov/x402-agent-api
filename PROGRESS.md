@@ -13,7 +13,7 @@
   - `src/brief` — extractive assemble/filter (no HTTP)
   - `src/routes` — HTTP only
   - `src/store` — D1 items + ledger
-  - `src/cron` — aggregate + 8-week cleanup
+  - `src/cron` — Wave1 ingest (quotes/feeds/tldr) + 8-week cleanup
 
 ### Testnet wallets (2026-08-06)
 
@@ -45,9 +45,18 @@ Secrets:
 | `POST /v1/brief` unpaid | **402** |
 | Worker → GoPlausible `/supported` | **200** after WARP off |
 
-### Local network note
+### Local network note (WARP)
 
-- Cloudflare WARP was breaking workerd outbound HTTPS (`internal error`). With WARP off, facilitator fetch works. Keep the `/supported` snapshot fallback for Testnet+`DEV_BYPASS_SECRET` as a safety net only.
+- **Turn Cloudflare WARP off** before local `wrangler` / workerd outbound (`pnpm dev`, facilitator probe, Wave1 `run-ingest`). WARP yields workerd `internal error; reference = …` on HTTPS fetch even when host `curl` works.
+- Disconnect: `warp-cli disconnect` (status should show Disconnected/Paused). Also clear `HTTP(S)_PROXY` if set.
+- Keep the `/supported` snapshot fallback for Testnet+`DEV_BYPASS_SECRET` as a safety net only.
+
+### 2026-08-07 — Wave1 promote
+
+- Schema: `0003_topics_kind.sql` (`section`→`topic`, `kind`/`external_id`/`payload`)
+- Packages: `packages/aggregator` + `packages/feeds` Wave1 allowlist; brief API `topics`
+- Cron: hourly quotes+feeds, TLDR every 6h, cleanup daily; `POST /internal/run-ingest`
+- Local verified (WARP off): quotes 9/9, feeds 28/29, tldr 6/6 → D1 → bypass brief 200 / unpaid 402
 
 ### Done
 
