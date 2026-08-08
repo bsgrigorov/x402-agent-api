@@ -18,18 +18,31 @@ const base: FeedItem = {
 };
 
 describe("filterAndRank", () => {
-  it("keeps keyword hits and prefers higher scores", () => {
+  it("ranks keyword hits first, then backfills with freshest others", () => {
     const other: FeedItem = {
       ...base,
       id: "b",
       url: "https://example.com/b",
-      title: "Unrelated sports score",
-      summary: "game",
+      title: "Unrelated infra note",
+      summary: "networking",
       keywords_hint: [],
       published_at: 1_700_000_999,
     };
     const out = filterAndRank([other, base], ["kubernetes"], 5);
-    expect(out).toHaveLength(1);
+    expect(out).toHaveLength(2);
     expect(out[0]?.id).toBe("a");
+    expect(out[1]?.id).toBe("b");
+  });
+
+  it("with no keywords returns newest first", () => {
+    const older: FeedItem = { ...base, id: "old", published_at: 100 };
+    const newer: FeedItem = {
+      ...base,
+      id: "new",
+      url: "https://example.com/new",
+      published_at: 200,
+    };
+    const out = filterAndRank([older, newer], [], 2);
+    expect(out.map((i) => i.id)).toEqual(["new", "old"]);
   });
 });

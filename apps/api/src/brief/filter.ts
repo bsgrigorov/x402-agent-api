@@ -19,19 +19,47 @@ export function scoreItem(item: FeedItem, keywords: string[]): number {
   return score;
 }
 
+/**
+ * Prefer keyword hits, then backfill with newest remaining candidates so
+ * each topic still returns a useful brief when keywords are narrow.
+ */
 export function filterAndRank(
   candidates: FeedItem[],
   keywords: string[],
   maxItems: number,
 ): FeedItem[] {
-  const scored = candidates
-    .map((item) => ({ item, score: scoreItem(item, keywords) }))
-    .filter((x) => (keywords.length === 0 ? true : x.score > 0));
+  if (maxItems <= 0) return [];
 
-  scored.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return b.item.published_at - a.item.published_at;
-  });
+  const scored = candidates.map((item) => ({
+    item,
+    score: scoreItem(item, keywords),
+  }));
 
-  return scored.slice(0, maxItems).map((x) => x.item);
+  const hits = scored
+    .filter((x) => (keywords.length === 0 ? true : x.score > 0))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.item.published_at - a.item.published_at;
+    });
+
+  const out: FeedItem[] = [];
+  const used = new Set<string>();
+  for (const { item } of hits) {
+    if (out.length >= maxItems) break;
+    out.push(item);
+    used.add(item.id);
+  }
+
+  if (out.length < maxItems) {
+    const rest = [...candidates]
+      .filter((item) => !used.has(item.id))
+      .sort((a, b) => b.published_at - a.published_at);
+    for (const item of rest) {
+      if (out.length >= maxItems) break;
+      out.push(item);
+      used.add(item.id);
+    }
+  }
+
+  return out;
 }

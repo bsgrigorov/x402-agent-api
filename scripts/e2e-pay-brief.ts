@@ -40,9 +40,11 @@ async function main(): Promise<void> {
   client.register("algorand:SGO1GKSzyE7IEPItTxCByw9x8FmnrCDe", new ExactAvmScheme(signer));
 
   const fetchPaid = wrapFetchWithPayment(fetch, client);
+  // Broad multi-topic request — keywords refine ranking; empty hits backfill with freshest.
   const body = {
-    keywords: ["kubernetes"],
-    topics: ["tech"],
+    keywords: ["kubernetes", "bitcoin", "fed", "cve", "llm", "openai", "cloudflare"],
+    topics: ["tech", "crypto", "markets", "security", "ai", "finance", "world", "infra"],
+    max_items_per_topic: 5,
     format: "json",
   };
 
