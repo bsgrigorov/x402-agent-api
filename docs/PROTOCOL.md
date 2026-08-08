@@ -325,6 +325,7 @@ Replay / double-fulfill: D1 `payment_claims` UNIQUE on sha256(`payment-signature
 
 ## Ops pointers
 
-- Wallet / opt-in / E2E: [scripts/README.md](./scripts/README.md)
+- Wallet / opt-in / E2E: [../scripts/README.md](../scripts/README.md)
 - Progress checklist: [PROGRESS.md](./PROGRESS.md)
+- HTTP examples: [API.md](./API.md)
 - Facilitator concept (upstream): [GoPlausible facilitator docs](https://github.com/GoPlausible/x402-avm/blob/main/docs/core-concepts/facilitator.md)

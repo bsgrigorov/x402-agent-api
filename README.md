@@ -4,6 +4,8 @@ Pay-per-request agent APIs on Algorand x402 (GoPlausible facilitator).
 
 Flagship product: **morning-brief** → `POST /v1/brief`.
 
+Request/response examples: [docs/API.md](./docs/API.md). Payment wire detail: [docs/PROTOCOL.md](./docs/PROTOCOL.md).
+
 | Env | Network | Host |
 |-----|---------|------|
 | `dev` | Testnet | `*.workers.dev` |
@@ -77,4 +79,4 @@ pnpm deploy:dev          # api then ingest (Testnet)
 
 Contest research: `~/dev/repos/kb/kb-projects/projects/algorand-x402-challenge/`.
 
-Protocol / trust model: [PROTOCOL.md](./PROTOCOL.md).
+Protocol / trust model: [docs/PROTOCOL.md](./docs/PROTOCOL.md). Progress: [docs/PROGRESS.md](./docs/PROGRESS.md).
