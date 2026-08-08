@@ -1,0 +1,32 @@
+{
+  // Migration owner only — not a deployed product Worker.
+  // Both apps/api and apps/ingest bind the same database_id + this migrations_dir.
+  "name": "x402-agent-db",
+  "account_id": "68dc41440ae5da6f6c21bfb160a117a5",
+  "main": "src/migrate-stub.ts",
+  "compatibility_date": "2026-08-01",
+  "env": {
+    "dev": {
+      "name": "x402-agent-db-dev",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "x402-agent-api-dev",
+          "database_id": "2ddb556a-199c-434f-b3b8-b615ecd76cf2",
+          "migrations_dir": "migrations"
+        }
+      ]
+    },
+    "prod": {
+      "name": "x402-agent-db-prod",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "x402-agent-api-prod",
+          "database_id": "REPLACE_AFTER_WRANGLER_D1_CREATE",
+          "migrations_dir": "migrations"
+        }
+      ]
+    }
+  }
+}

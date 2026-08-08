@@ -9,11 +9,10 @@
 - Cloudflare account pinned: **brslv** / `68dc41440ae5da6f6c21bfb160a117a5` (personal gmail). Account ID is **not a secret** (safe in wrangler.jsonc); OAuth/API tokens are.
 - Scaffolded monorepo: `apps/api` + `packages/{feeds,shared}` + GHA + hydrate script
 - Separation locked in code:
-  - `src/x402` — facilitator client, CAIP-2 networks, Exact AVM scheme, prices, challenge tag
-  - `src/brief` — extractive assemble/filter (no HTTP)
-  - `src/routes` — HTTP only
-  - `src/store` — D1 items + ledger
-  - `src/cron` — Wave1 ingest (quotes/feeds/tldr) + 8-week cleanup
+  - `apps/api` — paid HTTP (`fetch`); ledger/payments in `src/store`
+  - `apps/ingest` — Wave1 cron (`scheduled`) + `POST /internal/run-ingest`
+  - `packages/db` — D1 migrations + `items` accessors (schema owner)
+  - `src/x402` / `src/brief` / `src/routes` — payment + brief + HTTP wiring
 
 ### Testnet wallets (2026-08-06)
 
@@ -57,6 +56,15 @@ Secrets:
 - Packages: `packages/aggregator` + `packages/feeds` Wave1 allowlist; brief API `topics`
 - Cron: hourly quotes+feeds, TLDR every 6h, cleanup daily; `POST /internal/run-ingest`
 - Local verified (WARP off): quotes 9/9, feeds 28/29, tldr 6/6 → D1 → bypass brief 200 / unpaid 402
+
+### 2026-08-07 — Split ingest Worker
+
+- `packages/db` owns migrations; api + ingest bind same D1 `database_id`
+- Local persist shared at repo `.wrangler/state` (`--persist-to`)
+- Crons removed from `apps/api`; live on `apps/ingest` only
+- Free plan: **one** hourly cron on ingest (`0 * * * *`); fans out tldr (hour%6) + cleanup (hour===5)
+- Deployed: `x402-agent-api-dev` + `x402-agent-ingest-dev.darkhold.workers.dev`
+
 
 ### Done
 

@@ -7,13 +7,13 @@ import {
   resolveAdapter,
   type SourceDef,
 } from "@x402-agent-api/aggregator";
+import { upsertItems } from "@x402-agent-api/db";
 import { feedsForJob } from "@x402-agent-api/feeds";
 import type { FeedItem } from "@x402-agent-api/shared";
 import type { Env } from "../env";
-import { upsertItems } from "../store/items";
 
 const UA =
-  "x402-agent-api/0.2 (+https://x402.darkhold.dev; morning-brief ingest)";
+  "x402-agent-ingest/0.2 (+https://x402.darkhold.dev; morning-brief ingest)";
 
 const CONCURRENCY = 5;
 
@@ -113,7 +113,6 @@ export async function runIngestJob(env: Env, job: IngestJob): Promise<IngestResu
     collected.push(...r.items);
   }
 
-  // Dedupe by url (last wins)
   const byUrl = new Map<string, FeedItem>();
   for (const item of collected) byUrl.set(item.url, item);
   const written = await upsertItems(env.DB, [...byUrl.values()]);

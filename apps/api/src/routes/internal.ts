@@ -1,9 +1,8 @@
 import { Hono } from "hono";
 import type { FeedItem, ItemKind, TopicId } from "@x402-agent-api/shared";
 import { isTopicId, sanitizeFeedText, sha256Hex } from "@x402-agent-api/shared";
+import { upsertItems } from "@x402-agent-api/db";
 import type { Env } from "../env";
-import { upsertItems } from "../store/items";
-import { runHourlyIngest, runIngestJob, type IngestJob } from "../cron/ingest";
 import { bearerOk } from "./internal_auth";
 
 export const internalRoutes = new Hono<{ Bindings: Env }>();
@@ -25,6 +24,7 @@ type IngestBody = {
   }>;
 };
 
+/** Hydrate / seed JSON items (no live feed fetch). Live cron lives on ingest Worker. */
 internalRoutes.post("/internal/ingest", async (c) => {
   if (!bearerOk(c.req.header("authorization"), c.env.INGEST_TOKEN)) {
     return c.json({ error: "unauthorized" }, 401);
@@ -78,28 +78,6 @@ internalRoutes.post("/internal/ingest", async (c) => {
 
   const written = await upsertItems(c.env.DB, items);
   return c.json({ written, received: body.items?.length ?? 0 });
-});
-
-/** Trigger Wave1 fetch+normalize+upsert (local/dev ops; bearer auth). */
-internalRoutes.post("/internal/run-ingest", async (c) => {
-  if (!bearerOk(c.req.header("authorization"), c.env.INGEST_TOKEN)) {
-    return c.json({ error: "unauthorized" }, 401);
-  }
-  let job: IngestJob | "hourly" = "hourly";
-  try {
-    const body = (await c.req.json()) as { job?: string };
-    if (body.job === "quotes" || body.job === "feeds" || body.job === "tldr" || body.job === "hourly") {
-      job = body.job;
-    }
-  } catch {
-    /* default hourly */
-  }
-  if (job === "hourly") {
-    const result = await runHourlyIngest(c.env);
-    return c.json(result);
-  }
-  const result = await runIngestJob(c.env, job);
-  return c.json(result);
 });
 
 internalRoutes.get("/internal/facilitator-probe", async (c) => {

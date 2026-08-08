@@ -1,0 +1,2 @@
+# Copy to apps/ingest/.dev.vars (same INGEST_TOKEN as apps/api for local ops)
+INGEST_TOKEN=

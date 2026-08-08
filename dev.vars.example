@@ -1,4 +1,5 @@
-# Copy to apps/api/.dev.vars for `wrangler dev`
+# Copy to apps/api/.dev.vars for `pnpm dev`
+# Also put the same INGEST_TOKEN in apps/ingest/.dev.vars for `pnpm dev:ingest`
 PAY_TO=YOUR_ALGORAND_TESTNET_ADDRESS
 FACILITATOR_URL=https://facilitator.goplausible.xyz
 # openssl rand -hex 32  (≥32 chars required by /internal/ingest)

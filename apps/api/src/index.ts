@@ -5,8 +5,6 @@ import { getPaymentMiddleware } from "./x402/middleware";
 import { healthRoutes } from "./routes/health";
 import { briefRoutes } from "./routes/brief";
 import { internalRoutes } from "./routes/internal";
-import { runHourlyIngest, runIngestJob } from "./cron/ingest";
-import { cleanupOldItems } from "./cron/cleanup";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -32,6 +30,7 @@ app.get("/llms.txt", (c) => {
       "Paid Algorand x402 agent endpoints.",
       "Flagship: POST /v1/brief — keyword multi-topic intel brief with citations.",
       "Facilitator: GoPlausible. Tag: x402-global-challenge.",
+      "Feed cron: separate Worker x402-agent-ingest.",
       "",
     ].join("\n"),
   );
@@ -65,35 +64,6 @@ app.onError((err, c) => {
   return c.json({ error: "internal_error" }, 500);
 });
 
-/** Cron strings must match wrangler.jsonc triggers. */
-const CRON_HOURLY = "0 * * * *";
-const CRON_TLDR = "0 */6 * * *";
-const CRON_CLEANUP = "15 5 * * *";
-
 export default {
   fetch: app.fetch,
-  async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext) {
-    const cron = controller.cron;
-    ctx.waitUntil(
-      (async () => {
-        if (cron === CRON_CLEANUP) {
-          const deleted = await cleanupOldItems(env);
-          console.log("cron cleanup", { deleted });
-          return;
-        }
-        if (cron === CRON_TLDR) {
-          const tldr = await runIngestJob(env, "tldr");
-          console.log("cron tldr", tldr);
-          return;
-        }
-        // Default / hourly: quotes + feeds
-        if (cron === CRON_HOURLY || !cron) {
-          const hourly = await runHourlyIngest(env);
-          console.log("cron hourly", hourly);
-          return;
-        }
-        console.log("cron unknown", { cron });
-      })(),
-    );
-  },
 };

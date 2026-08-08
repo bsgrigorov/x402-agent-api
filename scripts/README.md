@@ -107,8 +107,9 @@ INGEST_TOKEN="$(grep '^INGEST_TOKEN=' apps/api/.dev.vars | cut -d= -f2-)" \
 BASE_URL=http://127.0.0.1:8787 \
   pnpm hydrate -- --file ./scripts/seed.example.json
 
-# Or live Wave1 ingest (quotes+feeds; use {"job":"tldr"} for TLDR expand):
-curl -s -X POST http://127.0.0.1:8787/internal/run-ingest \
+# Live Wave1 ingest (ingest Worker on :8789; use {"job":"tldr"} for TLDR expand):
+# pnpm dev:ingest
+curl -s -X POST http://127.0.0.1:8789/internal/run-ingest \
   -H "authorization: Bearer $INGEST_TOKEN" \
   -H 'content-type: application/json' \
   -d '{"job":"hourly"}'

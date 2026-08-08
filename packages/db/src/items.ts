@@ -65,10 +65,7 @@ export async function queryTopicCandidates(
 }
 
 /** Latest market quotes (no freshness floor beyond retention). */
-export async function queryQuotes(
-  db: D1Database,
-  limit = 50,
-): Promise<FeedItem[]> {
+export async function queryQuotes(db: D1Database, limit = 50): Promise<FeedItem[]> {
   const { results } = await db
     .prepare(
       `SELECT id, url, title, summary, source, topic, kind, published_at, ingested_at,

@@ -1,7 +1,7 @@
 import type { BriefRequest, BriefResponse, TopicId } from "@x402-agent-api/shared";
 import { assembleExtractive } from "./assemble";
 import { filterAndRank } from "./filter";
-import { newestIngestedAt, queryQuotes, queryTopicCandidates } from "../store/items";
+import { newestIngestedAt, queryQuotes, queryTopicCandidates } from "@x402-agent-api/db";
 
 /**
  * Morning-brief product entrypoint — no HTTP, no x402.

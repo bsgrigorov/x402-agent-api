@@ -5,7 +5,7 @@ export type Env = {
   BRIEF_PRICE_USDC: string;
   /** Merchant Algorand address (payTo). Set via wrangler secret / .dev.vars */
   PAY_TO: string;
-  /** Bearer token for POST /internal/ingest */
+  /** Bearer token for POST /internal/ingest (hydrate). Live cron uses ingest Worker. */
   INGEST_TOKEN: string;
   /**
    * Optional Testnet-only unpaid bypass header value (`x-dev-bypass`).

@@ -54,6 +54,150 @@ Unpaid local smoke can short-circuit with Testnet-only `x-dev-bypass` (never on 
 
 ---
 
+## Wire formats: `accepts[]` → signature → `/verify`
+
+This is the concrete meaning of “Client builds Exact AVM payment matching `accepts[]`.” Headers are base64(JSON). Shapes come from `@x402/core` v2 + `@x402/avm` Exact scheme; this Worker builds them via `@x402/hono` from `apps/api/src/x402/middleware.ts`.
+
+### End-to-end
+
+```text
+1. Client → Merchant: POST /v1/brief (no payment)
+2. Merchant → Client: 402 + PAYMENT-REQUIRED = base64(PaymentRequired)
+3. Client picks one accepts[] row, builds Exact AVM txn group, signs payer leg
+4. Client → Merchant: same POST + PAYMENT-SIGNATURE = base64(PaymentPayload)
+5. Merchant → Facilitator: POST /verify { paymentPayload, paymentRequirements }
+6. If valid → fulfill → POST /settle → 200 + PAYMENT-RESPONSE
+```
+
+### 1. Merchant `PAYMENT-REQUIRED` (decoded)
+
+Route config (`scheme: exact`, `price`, CAIP-2 `network`, `PAY_TO`, `extra.asset` / `extra.tag`) is turned into requirements. Facilitator `GET /supported` supplies `extra.feePayer`, which Exact AVM server merges into `accepts[]`.
+
+Testnet example (`BRIEF_PRICE_USDC=0.05` → atomic `50000`):
+
+```json
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "http://127.0.0.1:8787/v1/brief",
+    "description": "Keyword-filtered multi-section intel brief...",
+    "mimeType": "application/json"
+  },
+  "accepts": [
+    {
+      "scheme": "exact",
+      "network": "algorand:SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=",
+      "amount": "50000",
+      "asset": "10458941",
+      "payTo": "<MERCHANT_PAY_TO>",
+      "maxTimeoutSeconds": 60,
+      "extra": {
+        "asset": "10458941",
+        "tag": "x402-global-challenge",
+        "feePayer": "ZMFK2OI7ZBD2U27ISERZC4S6LKM6WMFJPZQ4MYNJDZ2VNBNMBA67RA22AA"
+      }
+    }
+  ]
+}
+```
+
+GoPlausible’s AVM fee-payer / settlement signer (confirmed via live `/supported`) is that `ZMFK2OI7…` address. Inspect locally:
+
+```bash
+curl -sD - -o /dev/null -X POST http://127.0.0.1:8787/v1/brief \
+  -H 'content-type: application/json' \
+  -d '{"keywords":["kubernetes"],"sections":["tech"]}'
+# decode the PAYMENT-REQUIRED header: base64 -d | jq .
+```
+
+### 2. Client `PAYMENT-SIGNATURE` (decoded)
+
+`pnpm e2e:pay-brief` uses `wrapFetchWithPayment` + `ExactAvmScheme`: decode 402 → select one `accepts[]` entry → `createPaymentPayload` → set header.
+
+Exact AVM group construction:
+
+| Step | What happens |
+|------|----------------|
+| Fee-payer leg | If `extra.feePayer` set: 0-ALGO self-pay from facilitator, **unsigned** by client |
+| Payment leg | ASA transfer `payer → payTo`, amount/asset from requirements; fee=0 when sponsored |
+| Group | Shared atomic group ID |
+| Sign | Client signs only indexes where `sender === payer` |
+| Encode | Each txn → base64 msgpack bytes in `paymentGroup` |
+
+HTTP payload (v2):
+
+```json
+{
+  "x402Version": 2,
+  "resource": { "url": "...", "description": "...", "mimeType": "application/json" },
+  "accepted": { /* exact copy of the chosen accepts[] entry */ },
+  "payload": {
+    "paymentGroup": [
+      "<base64 unsigned fee-payer txn>",
+      "<base64 signed ASA transfer>"
+    ],
+    "paymentIndex": 1
+  }
+}
+```
+
+`PAYMENT-SIGNATURE` is `base64(JSON.stringify(that))`. On AVM this is a **signed txn group**, not an EIP-712 signature string. `accepted` is the requirements snapshot the client paid against; that binding is what makes verify work.
+
+### 3. Merchant → facilitator `/verify`
+
+Merchant does not invent new requirements. `@x402/hono` / `@x402/core`:
+
+1. Decode `PAYMENT-SIGNATURE` → `paymentPayload`
+2. Rebuild current route `accepts`
+3. `findMatchingRequirements(accepts, paymentPayload)` must match `paymentPayload.accepted`
+4. POST to facilitator:
+
+```http
+POST https://facilitator.goplausible.xyz/verify
+Content-Type: application/json
+
+{
+  "x402Version": 2,
+  "paymentPayload": { /* decoded PAYMENT-SIGNATURE */ },
+  "paymentRequirements": { /* matching accepts[] entry */ }
+}
+```
+
+Same body shape for `/settle` after the handler. Success: `{ "isValid": true, "payer": "<addr>" }`. Failure: `isValid: false` + `invalid_exact_avm_*`.
+
+### 4. Why verify is “guaranteed” (and what is not)
+
+Not URL allowlisting. Cryptographic + structural matching:
+
+| Check | Who | Proves |
+|-------|-----|--------|
+| Scheme/network = Exact AVM | Facilitator | Right payment kind |
+| `paymentPayload.accepted` ≈ `paymentRequirements` | Merchant middleware + facilitator | Price/`payTo` cannot change after client signed |
+| Txn amount / receiver / ASA | Facilitator | Exact USDC transfer to merchant |
+| Payer signature valid | Facilitator | Only key holder authorized transfer |
+| Fee-payer leg only completable by facilitator | Facilitator | Sponsored gas is safe |
+| Simulation + settle broadcast | Facilitator + chain | Opt-in, balances, group validity |
+
+Prerequisites for settle success: client signed the 402’s `accepts[]`, merchant still advertises the same requirements, payer has USDC + ASA opt-in, merchant `PAY_TO` opted into USDC.
+
+Not covered by verify alone: brief product quality; honesty of `payTo` in the original 402 (client must pin/trust before signing); Worker replay of the same header (D1 `payment_claims` → 409). Facilitator settle remains the money gate; D1 is metering.
+
+### Mental model
+
+```text
+accepts[]  ──(client copies)──►  accepted  ──(merchant echoes)──►  paymentRequirements
+                                        │
+                                        ▼
+                              signed Algorand group
+                              (payload.paymentGroup)
+                                        │
+                                        ▼
+                                   /verify then /settle
+```
+
+---
+
 ## Component view
 
 ```mermaid

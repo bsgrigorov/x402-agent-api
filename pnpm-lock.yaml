@@ -32,12 +32,9 @@ importers:
 
   apps/api:
     dependencies:
-      '@x402-agent-api/aggregator':
+      '@x402-agent-api/db':
         specifier: workspace:*
-        version: link:../../packages/aggregator
-      '@x402-agent-api/feeds':
-        specifier: workspace:*
-        version: link:../../packages/feeds
+        version: link:../../packages/db
       '@x402-agent-api/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -76,6 +73,34 @@ importers:
         specifier: 4.119.0
         version: 4.119.0(@cloudflare/workers-types@5.20260801.1)
 
+  apps/ingest:
+    dependencies:
+      '@x402-agent-api/aggregator':
+        specifier: workspace:*
+        version: link:../../packages/aggregator
+      '@x402-agent-api/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@x402-agent-api/feeds':
+        specifier: workspace:*
+        version: link:../../packages/feeds
+      '@x402-agent-api/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      hono:
+        specifier: 4.13.0
+        version: 4.13.0
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20260801.1
+        version: 5.20260801.1
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      wrangler:
+        specifier: 4.119.0
+        version: 4.119.0(@cloudflare/workers-types@5.20260801.1)
+
   packages/aggregator:
     dependencies:
       '@x402-agent-api/shared':
@@ -91,6 +116,22 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+
+  packages/db:
+    dependencies:
+      '@x402-agent-api/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20260801.1
+        version: 5.20260801.1
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      wrangler:
+        specifier: 4.119.0
+        version: 4.119.0(@cloudflare/workers-types@5.20260801.1)
 
   packages/feeds:
     dependencies:
