@@ -64,6 +64,7 @@ Secrets:
 - Crons removed from `apps/api`; live on `apps/ingest` only
 - Free plan: **one** hourly cron on ingest (`0 * * * *`); fans out tldr (hour%6) + cleanup (hour===5)
 - Deployed: `x402-agent-api-dev` + `x402-agent-ingest-dev.darkhold.workers.dev`
+- Remote E2E (2026-08-07): ingest hourly+tldr OK → bypass brief 200 → paid settle `V4XEQLXO…` + brief 200
 
 
 ### Done
