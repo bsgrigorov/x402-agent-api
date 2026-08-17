@@ -16,7 +16,8 @@ commit keys.
 Defaults:
 
 - Wallets file: `apps/api/.wallets.testnet.json` (override with `WALLETS_FILE` or `--file` / `--out`)
-- Vault copy: `~/dev/repos/kb/kb-vault-private/projects/algorand-x402/testnet-wallets.json`
+- Vault (age-encrypted): `~/dev/repos/personal/kb/personal/kb-vault-private/projects/algorand-x402/testnet-wallets.json.age`
+- Live plaintext (gitignored, stays in project): `apps/api/.wallets.testnet.json`
 - Algod: AlgoNode public Testnet/Mainnet
 
 ---

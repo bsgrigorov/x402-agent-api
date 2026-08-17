@@ -28,7 +28,7 @@ Payer rotated 2026-08-07 (old `L7UAGJP3…` retired after Circle send before opt
 Secrets:
 
 - Local (gitignored): `apps/api/.wallets.testnet.json`
-- Vault: `~/dev/repos/kb/kb-vault-private/projects/algorand-x402/testnet-wallets.json`
+- Vault (age-encrypted): `~/dev/repos/personal/kb/personal/kb-vault-private/projects/algorand-x402/testnet-wallets.json.age` (plaintext remains gitignored at `apps/api/.wallets.testnet.json`)
 
 `apps/api/.dev.vars` `PAY_TO` updated to merchant address. Restart wrangler to pick it up.
 

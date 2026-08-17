@@ -77,6 +77,6 @@ pnpm deploy:dev          # api then ingest (Testnet)
 # Set INGEST_TOKEN secret on both Workers (api hydrate + ingest run-ingest)
 ```
 
-Contest research: `~/dev/repos/kb/kb-projects/projects/algorand-x402-challenge/`.
+Contest research: `~/dev/repos/personal/kb/personal/kb-projects/projects/algorand-x402-challenge/`.
 
 Protocol / trust model: [docs/PROTOCOL.md](./docs/PROTOCOL.md). Progress: [docs/PROGRESS.md](./docs/PROGRESS.md).
