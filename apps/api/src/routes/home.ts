@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import type { Env } from "../env";
+import { FAVICON_PNG, FAVICON_SVG, OG_IMAGE_PNG } from "./site-assets";
 
 const SITE = "https://x402.darkhold.dev";
 const TITLE = "x402 Morning Brief";
@@ -7,12 +8,21 @@ const DESCRIPTION =
   "Pay-per-request multi-topic intel brief for agents. $0.05 USDC on Algorand Mainnet via x402 and GoPlausible.";
 const GITHUB = "https://github.com/bsgrigorov/x402-agent-api";
 
+/** JSON only when the client explicitly asks for it; HTML otherwise (browsers + link preview bots). */
 export function wantsJsonResponse(accept: string | undefined): boolean {
-  if (!accept) return true;
+  if (!accept) return false;
   const lower = accept.toLowerCase();
   if (lower.includes("text/html")) return false;
   if (lower.includes("application/json")) return true;
-  return true;
+  return false;
+}
+
+const PREVIEW_BOT =
+  /facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot/i;
+
+export function isLinkPreviewBot(userAgent: string | undefined): boolean {
+  if (!userAgent) return false;
+  return PREVIEW_BOT.test(userAgent);
 }
 
 export function rootJson() {
@@ -43,20 +53,35 @@ function escapeHtml(s: string): string {
 export function rootHtml(): string {
   const title = escapeHtml(TITLE);
   const desc = escapeHtml(DESCRIPTION);
-  const ogImage = `${SITE}/og-image.svg`;
+  const ogImage = `${SITE}/og-image.png`;
+  const ogImageAlt = escapeHtml("x402 Morning Brief — pay-per-request intel on Algorand");
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050508" />
   <title>${title}</title>
   <meta name="description" content="${desc}" />
+  <meta property="og:type" content="website" />
   <meta property="og:site_name" content="x402 Morning Brief" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
   <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${ogImageAlt}" />
   <meta property="og:url" content="${SITE}/" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${desc}" />
+  <meta name="twitter:image" content="${ogImage}" />
+  <meta name="twitter:image:alt" content="${ogImageAlt}" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/favicon.ico" />
   <link rel="canonical" href="${SITE}/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -280,15 +305,40 @@ export const OG_IMAGE_SVG = `<?xml version="1.0" encoding="UTF-8"?>
 </svg>`;
 
 export function handleRoot(c: Context<{ Bindings: Env }>) {
-  if (wantsJsonResponse(c.req.header("Accept"))) {
-    return c.json(rootJson());
+  const accept = c.req.header("Accept");
+  const ua = c.req.header("User-Agent");
+  const json =
+    wantsJsonResponse(accept) && !isLinkPreviewBot(ua);
+  if (json) {
+    return c.json(rootJson(), 200, { Vary: "Accept" });
   }
-  return c.html(rootHtml());
+  return c.html(rootHtml(), 200, { Vary: "Accept" });
 }
 
 export function handleOgImage(c: Context<{ Bindings: Env }>) {
   return c.body(OG_IMAGE_SVG, 200, {
     "Content-Type": "image/svg+xml",
+    "Cache-Control": "public, max-age=86400",
+  });
+}
+
+export function handleFaviconSvg(c: Context<{ Bindings: Env }>) {
+  return c.body(FAVICON_SVG, 200, {
+    "Content-Type": "image/svg+xml",
+    "Cache-Control": "public, max-age=604800, immutable",
+  });
+}
+
+export function handleFaviconIco(c: Context<{ Bindings: Env }>) {
+  return c.body(FAVICON_PNG, 200, {
+    "Content-Type": "image/png",
+    "Cache-Control": "public, max-age=604800, immutable",
+  });
+}
+
+export function handleOgImagePng(c: Context<{ Bindings: Env }>) {
+  return c.body(OG_IMAGE_PNG, 200, {
+    "Content-Type": "image/png",
     "Cache-Control": "public, max-age=86400",
   });
 }

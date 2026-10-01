@@ -1,18 +1,43 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import type { Env } from "./env";
+import { securityMiddleware } from "./middleware/security";
 import { getPaymentMiddleware } from "./x402/middleware";
 import { healthRoutes } from "./routes/health";
 import { briefRoutes } from "./routes/brief";
 import { internalRoutes } from "./routes/internal";
-import { handleOgImage, handleRoot } from "./routes/home";
+import {
+  handleFaviconIco,
+  handleFaviconSvg,
+  handleOgImage,
+  handleOgImagePng,
+  handleRoot,
+} from "./routes/home";
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.use("*", cors());
+app.use("*", securityMiddleware);
+app.use(
+  "*",
+  cors({
+    origin: "*",
+    allowMethods: ["GET", "HEAD", "POST", "OPTIONS"],
+    maxAge: 86400,
+  }),
+);
 
 app.get("/", handleRoot);
+app.get("/favicon.ico", handleFaviconIco);
+app.get("/favicon.svg", handleFaviconSvg);
+app.get("/og-image.png", handleOgImagePng);
 app.get("/og-image.svg", handleOgImage);
+
+app.get("/robots.txt", (c) =>
+  c.text("User-agent: *\nAllow: /\n", 200, {
+    "Content-Type": "text/plain; charset=utf-8",
+    "Cache-Control": "public, max-age=86400",
+  }),
+);
 
 app.get("/llms.txt", (c) => {
   return c.text(

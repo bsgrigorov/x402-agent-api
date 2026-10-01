@@ -97,6 +97,13 @@ Secrets:
 - `apps/api/src/routes/home.ts`: HTML landing at `GET /` (OpenGraph, `/og-image.svg`); JSON index with `Accept: application/json`
 - Deployed prod API + ingest; live https://x402.darkhold.dev/
 
+### 2026-10-01 — Landing polish (favicon, OG PNG, security headers)
+
+- Favicon routes (`/favicon.ico`, `/favicon.svg`), `/og-image.png` for social crawlers, `robots.txt`
+- Hono `secureHeaders` + tighter CORS methods; HTML meta (Twitter, og:type, theme-color)
+- Deployed prod (`x402-agent-api-prod`); securityheaders-grade headers verified live
+- `GET /` content negotiation: HTML for `*/*` and preview bots; JSON only with `Accept: application/json`
+
 ### Next
 
 - [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
