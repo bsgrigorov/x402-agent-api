@@ -86,12 +86,19 @@ Secrets:
 - Paid Mainnet E2E + multi-pay smoke (`e2e:pay-brief --count`); script fixes (mainnet CAIP-2 register, `wallets:check` explorer + network infer)
 - Ops runbook: `scripts/README.md` § Mainnet
 
+### 2026-10-01 — Bazaar + challenge attribution
+
+- Bazaar `declareDiscoveryExtension` on `POST /v1/brief`; validated in unit test
+- Mainnet catalog: `/discovery/resources` + leaderboard `src=bazaar` / `x402-global-challenge` (24h)
+- HTML landing at `/` with OpenGraph + `/og-image.svg` for Bazaar merchant metadata
+
 ### Next
 
 - [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
 - [x] Make repo public (`docs/PUBLIC.md`)
-- [ ] Electric Capital repo listing
-- [ ] Challenge submission form
-- [ ] Bazaar discovery extension (Workers-safe; tag in `extra` today)
+- [ ] Electric Capital `open-dev-data` PR (see `docs/CHALLENGE.md` § Electric Capital)
+- [x] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (submitted 2026-10-01)
+- [x] Bazaar discovery extension on Worker
+- [x] Leaderboard / Bazaar check (GoPlausible)
 - [ ] Brief polish; OpenRouter when `synthesize` ships
-- [ ] Leaderboard / Bazaar check (GoPlausible)
+- [ ] Drive non-self Mainnet usage (judging / DEV bucket)

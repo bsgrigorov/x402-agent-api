@@ -23,7 +23,7 @@ USDC on **Algorand Mainnet** via [x402](https://www.x402.org/) and [GoPlausible]
 ## Try it (unpaid)
 
 ```bash
-curl -s https://x402.darkhold.dev/
+curl -s -H 'Accept: application/json' https://x402.darkhold.dev/
 curl -s -X POST https://x402.darkhold.dev/v1/brief \
   -H 'content-type: application/json' \
   -d '{"keywords":["kubernetes"],"topics":["tech"]}'
@@ -50,6 +50,7 @@ Hosted on **Cloudflare Workers**; facilitator `https://facilitator.goplausible.x
 | [docs/API.md](./docs/API.md) | Request/response, errors |
 | [docs/PROTOCOL.md](./docs/PROTOCOL.md) | x402 trust model, payment flow |
 | [docs/OPERATIONS.md](./docs/OPERATIONS.md) | Local dev, deploy, CI |
+| [docs/CHALLENGE.md](./docs/CHALLENGE.md) | Challenge + Electric Capital checklist |
 | [scripts/README.md](./scripts/README.md) | Wallets, funding, E2E scripts |
 | [SECURITY.md](./SECURITY.md) | Reporting vulnerabilities |
 

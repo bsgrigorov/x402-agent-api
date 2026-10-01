@@ -5,22 +5,14 @@ import { getPaymentMiddleware } from "./x402/middleware";
 import { healthRoutes } from "./routes/health";
 import { briefRoutes } from "./routes/brief";
 import { internalRoutes } from "./routes/internal";
+import { handleOgImage, handleRoot } from "./routes/home";
 
 const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", cors());
 
-app.get("/", (c) => {
-  return c.json({
-    name: "x402-morning-brief",
-    product: "morning-brief",
-    endpoints: {
-      health: "GET /health",
-      brief: "POST /v1/brief (x402)",
-      ingest: "POST /internal/ingest (bearer)",
-    },
-  });
-});
+app.get("/", handleRoot);
+app.get("/og-image.svg", handleOgImage);
 
 app.get("/llms.txt", (c) => {
   return c.text(

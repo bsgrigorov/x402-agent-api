@@ -224,8 +224,8 @@ Expect: `success: true`, merchant USDC +$0.05 per call, payer USDC −$0.05 per 
 ### Challenge checklist (off-repo)
 
 - [Submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (deadline per [challenge post](https://algorand.co/blog/the-x402-global-challenge-is-live-how-to-build-submit-your-entry))
-- Electric Capital: public GitHub repo with Algorand/x402 code
-- GoPlausible leaderboard + Bazaar (hackathon filter); Bazaar discovery extension still TBD in Worker
+- Electric Capital: PR to [electric-capital/open-dev-data](https://github.com/electric-capital/open-dev-data) (`docs/CHALLENGE.md`)
+- GoPlausible leaderboard + Bazaar: discovery extension on `POST /v1/brief`, tag `x402-global-challenge`
 
 ---
 

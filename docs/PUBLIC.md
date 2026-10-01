@@ -1,6 +1,6 @@
 # Making this repository public
 
-Checklist before **Settings → Change visibility → Public** (Electric Capital / challenge).
+Checklist before **Settings → Change visibility → Public** (challenge / open source).
 
 ## Must be true
 
@@ -21,15 +21,15 @@ Checklist before **Settings → Change visibility → Public** (Electric Capital
 ## Recommended before flip
 
 - [x] [LICENSE](../LICENSE) (MIT).
-- [ ] Short description + topics on GitHub (`algorand`, `x402`, `cloudflare-workers`).
+- [x] Short description + topics on GitHub (`algorand`, `x402`, `cloudflare-workers`, `agentic-commerce`).
 - [x] README links prod base + `POST /v1/brief`, challenge tag `x402-global-challenge`.
 - [ ] Run `pnpm typecheck` && `pnpm test` on `main`.
 - [ ] Optional: enable branch protection on `main` (require CI).
 
 ## After public
 
-- [ ] Electric Capital repo submission (challenge requirement).
-- [ ] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) with public repo URL.
+- [ ] Electric Capital: PR to [open-dev-data](https://github.com/electric-capital/open-dev-data) (see [docs/CHALLENGE.md](./CHALLENGE.md)).
+- [x] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) with public repo URL.
 - [ ] Do not open issues with logs containing `INGEST_TOKEN` or payment headers.
 
 No API keys or LLM providers in runtime today (`synthesize` disabled).
