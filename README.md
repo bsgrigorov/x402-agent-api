@@ -3,8 +3,8 @@
 Pay-per-request agent APIs on Algorand x402 (GoPlausible facilitator). Challenge tag:
 `x402-global-challenge`.
 
-Flagship product: **morning-brief** → `POST /v1/brief`. Prod health:
-https://x402.darkhold.dev/health
+**Prod base:** https://x402.darkhold.dev — `GET /` lists routes; **paid API:** `POST /v1/brief`
+($0.05 USDC). Ops probe: `GET /health`. Discovery: `GET /.well-known/x402.json`, `GET /llms.txt`.
 
 Request/response examples: [docs/API.md](./docs/API.md). Payment wire detail: [docs/PROTOCOL.md](./docs/PROTOCOL.md).
 

@@ -22,7 +22,7 @@ Checklist before **Settings → Change visibility → Public** (Electric Capital
 
 - [x] [LICENSE](../LICENSE) (MIT).
 - [ ] Short description + topics on GitHub (`algorand`, `x402`, `cloudflare-workers`).
-- [ ] README links: live health `https://x402.darkhold.dev/health`, challenge tag `x402-global-challenge`.
+- [x] README links prod base + `POST /v1/brief`, challenge tag `x402-global-challenge`.
 - [ ] Run `pnpm typecheck` && `pnpm test` on `main`.
 - [ ] Optional: enable branch protection on `main` (require CI).
 
