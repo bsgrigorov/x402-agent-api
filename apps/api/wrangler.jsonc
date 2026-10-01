@@ -25,7 +25,8 @@
     },
     "prod": {
       "name": "x402-agent-api-prod",
-      "routes": [{ "pattern": "x402.darkhold.dev", "custom_domain": true }],
+      // Host x402.darkhold.dev: custom domain attached in Cloudflare (dashboard). Omitting
+      // `routes` here so account-scoped CI tokens can deploy without Zone Workers Routes.
       "vars": {
         "NETWORK": "ALGORAND_Mainnet_CAIP2",
         "BRIEF_PRICE_USDC": "0.05",

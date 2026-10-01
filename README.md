@@ -84,8 +84,9 @@ Mainnet wallet / funding / paid E2E: **scripts/README.md** § Mainnet.
 
 **GitHub Actions** (`.github/workflows/deploy-*.yml`): repo secrets `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID` (same account as `account_id` in `wrangler.jsonc`). Create a custom API
-token in the Cloudflare dashboard with account **Workers Scripts/Routes** and **D1** Edit, **Account
-Settings** Read; then `gh secret set` both names. Optional local helpers (gitignored):
+token in the Cloudflare dashboard with account **Workers Scripts** and **D1** Edit, **Account
+Settings** Read (zone routes not required; prod hostname is attached in Cloudflare). Then
+`gh secret set` both names. Optional local helpers (gitignored):
 `sibling secret/scripts/push-gha-cf-secrets.sh`. Push to `main` runs dev deploy (migrate + workers);
 prod is manual `workflow_dispatch` (type `deploy-prod`).
 
