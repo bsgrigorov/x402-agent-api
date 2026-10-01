@@ -4,7 +4,7 @@
 
 ## 2026-08-06
 
-- Created private GitHub repo `bsgrigorov/x402-agent-api` (confirmed **private**)
+- GitHub repo `bsgrigorov/x402-agent-api`
 - Repo: `x402-agent-api` (monorepo root)
 - Cloudflare account pinned in `wrangler.jsonc` (`68dc41440ae5da6f6c21bfb160a117a5`). Account ID is **not a secret**; API tokens are.
 - Scaffolded monorepo: `apps/api` + `packages/{feeds,shared}` + GHA + hydrate script
@@ -16,14 +16,8 @@
 
 ### Testnet wallets (2026-08-06)
 
-Created merchant + payer. **Keys not in git.**
-
-| Role | Address |
-|------|---------|
-| Merchant (`PAY_TO`) | `BQ3VHAHIZ2LVHS3RPGWTX4JWFJ2WFH5USQOCRIJFKTQ7XUREEKJB5NGPCY` |
-| Payer (client E2E) | `JWDOA6JEA4KOGBX6AOHROPJICSFWOXTOZ5AHB4QNZRTJ72VGCKFDV3SWNE` |
-
-Payer rotated 2026-08-07 (old `L7UAGJP3…` retired after Circle send before opt-in). Merchant unchanged.
+Merchant + payer generated; keys only in gitignored `apps/api/.wallets.testnet.json`. Payer rotated
+2026-08-07; merchant unchanged.
 
 Secrets:
 
@@ -88,14 +82,15 @@ Secrets:
 
 ### 2026-10-01 — Mainnet prod
 
-- Mainnet wallets in `x402-challenge/secret/` (gitignored); prod D1 + migrations; `x402-agent-api-prod` on `x402.darkhold.dev`; ingest prod + cron
+- Mainnet wallets in sibling `secret/` (gitignored); prod D1 + migrations; `x402-agent-api-prod` on `x402.darkhold.dev`; ingest prod + cron
 - Paid Mainnet E2E + multi-pay smoke (`e2e:pay-brief --count`); script fixes (mainnet CAIP-2 register, `wallets:check` explorer + network infer)
 - Ops runbook: `scripts/README.md` § Mainnet
 
 ### Next
 
 - [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
-- [ ] Make repo public (`docs/PUBLIC.md`) + Electric Capital
+- [x] Make repo public (`docs/PUBLIC.md`)
+- [ ] Electric Capital repo listing
 - [ ] Challenge submission form
 - [ ] Bazaar discovery extension (Workers-safe; tag in `extra` today)
 - [ ] Brief polish; OpenRouter when `synthesize` ships

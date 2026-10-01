@@ -1,8 +1,10 @@
 # x402-agent-api
 
-Pay-per-request agent APIs on Algorand x402 (GoPlausible facilitator).
+Pay-per-request agent APIs on Algorand x402 (GoPlausible facilitator). Challenge tag:
+`x402-global-challenge`.
 
-Flagship product: **morning-brief** → `POST /v1/brief`.
+Flagship product: **morning-brief** → `POST /v1/brief`. Prod health:
+https://x402.darkhold.dev/health
 
 Request/response examples: [docs/API.md](./docs/API.md). Payment wire detail: [docs/PROTOCOL.md](./docs/PROTOCOL.md).
 
