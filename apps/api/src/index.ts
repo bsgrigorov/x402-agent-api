@@ -12,7 +12,7 @@ app.use("*", cors());
 
 app.get("/", (c) => {
   return c.json({
-    name: "x402-agent-api",
+    name: "x402-morning-brief",
     product: "morning-brief",
     endpoints: {
       health: "GET /health",
