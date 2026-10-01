@@ -13,6 +13,7 @@ import {
   ALGORAND_MAINNET_FACILITATOR_CAIP2,
   ALGORAND_TESTNET_FACILITATOR_CAIP2,
 } from "./networks";
+import { briefRouteExtensions } from "./brief-discovery";
 
 export const CHALLENGE_TAG = "x402-global-challenge";
 export {
@@ -77,8 +78,8 @@ export function getPaymentMiddleware(env: Env): MiddlewareHandler {
  * Build x402 payment middleware for this Worker env.
  * Kept separate from product handlers so new paid routes only extend route config.
  *
- * Bazaar/discovery extensions omitted for MVP: Workers disallow Ajv `new Function`
- * schema codegen. Challenge tag stays in `extra.tag` for listing.
+ * Bazaar: `declareDiscoveryExtension` on the route (indexed after first settle).
+ * Challenge: `extra.tag` for leaderboard SOURCE attribution at settle time.
  */
 export function createPaymentMiddleware(env: Env): MiddlewareHandler {
   if (
@@ -119,6 +120,7 @@ export function createPaymentMiddleware(env: Env): MiddlewareHandler {
       description:
         "Keyword-filtered multi-topic intel brief with source links (extractive; citations from retrieved feed items)",
       mimeType: "application/json",
+      extensions: briefRouteExtensions,
     },
   };
 
