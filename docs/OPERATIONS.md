@@ -35,3 +35,14 @@ Workflows: `deploy-dev.yml` (push to `main`), `deploy-prod.yml` (`workflow_dispa
 
 Prod custom domain is attached in the Cloudflare dashboard (not in `wrangler.jsonc` routes) so
 account-scoped CI tokens work.
+
+## Public surface (prod)
+
+| Route | Purpose |
+|-------|---------|
+| `GET /` | HTML landing + OpenGraph (`home.ts`); JSON with `Accept: application/json` |
+| `GET /og-image.svg` | Social / Bazaar merchant image |
+| `GET /llms.txt`, `GET /.well-known/x402.json` | Agent discovery |
+| `POST /v1/brief` | Paid brief (x402 + Bazaar discovery metadata) |
+
+After changing landing or OG copy, redeploy API and run one Mainnet `pnpm e2e:pay-brief` so GoPlausible refreshes merchant metadata.

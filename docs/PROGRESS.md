@@ -88,9 +88,14 @@ Secrets:
 
 ### 2026-10-01 — Bazaar + challenge attribution
 
-- Bazaar `declareDiscoveryExtension` on `POST /v1/brief`; validated in unit test
-- Mainnet catalog: `/discovery/resources` + leaderboard `src=bazaar` / `x402-global-challenge` (24h)
-- HTML landing at `/` with OpenGraph + `/og-image.svg` for Bazaar merchant metadata
+- Bazaar `declareDiscoveryExtension` on `POST /v1/brief` (`brief-discovery.ts`); validated in unit test
+- Mainnet catalog: `/discovery/resources` + leaderboard `src=bazaar` / `x402-global-challenge` (24h window)
+- Electric Capital [open-dev-data PR #3083](https://github.com/electric-capital/open-dev-data/pull/3083) opened
+
+### 2026-10-01 — Prod landing (Bazaar branding)
+
+- `apps/api/src/routes/home.ts`: HTML landing at `GET /` (OpenGraph, `/og-image.svg`); JSON index with `Accept: application/json`
+- Deployed prod API + ingest; live https://x402.darkhold.dev/
 
 ### Next
 

@@ -11,7 +11,8 @@ Official program: [Global x402 Challenge](https://algorand.co/global-x402-challe
 | Bazaar discovery on paid route | `apps/api/src/x402/brief-discovery.ts` |
 | Tag `x402-global-challenge` | `extra.tag` in payment middleware |
 | Public GitHub with Algorand/x402 code | https://github.com/bsgrigorov/x402-agent-api |
-| Bazaar + leaderboard visibility | Verify via facilitator discovery + `src=bazaar` / `x402-global-challenge` |
+| Bazaar + leaderboard visibility | Listed under `src=bazaar` and `x402-global-challenge` (use recent dashboard range) |
+| Domain branding (OG / landing) | `GET /` (HTML), `GET /og-image.svg`, `llms.txt`, `.well-known/x402.json` |
 
 ## Algorand Foundation submission form
 
@@ -30,7 +31,7 @@ Project details + repo URL: [submission form](https://fjtqz.share-eu1.hsforms.co
 
 Electric Capital reviews and merges on their schedule; absence from open-dev-data does **not** block GoPlausible settle or Bazaar listing.
 
-**Our PR:** https://github.com/electric-capital/open-dev-data/pull/3083 (pending merge).
+**Our PR:** https://github.com/electric-capital/open-dev-data/pull/3083 (opened 2026-10-01; merge pending Electric Capital review).
 
 ## Merchant branding (Bazaar)
 

@@ -221,11 +221,15 @@ WALLETS_FILE=../secret/wallets.mainnet.json \
 
 Expect: `success: true`, merchant USDC +$0.05 per call, payer USDC −$0.05 per call.
 
-### Challenge checklist (off-repo)
+### Challenge checklist
 
-- [Submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (deadline per [challenge post](https://algorand.co/blog/the-x402-global-challenge-is-live-how-to-build-submit-your-entry))
-- Electric Capital: PR to [electric-capital/open-dev-data](https://github.com/electric-capital/open-dev-data) (`docs/CHALLENGE.md`)
-- GoPlausible leaderboard + Bazaar: discovery extension on `POST /v1/brief`, tag `x402-global-challenge`
+Full checklist: [docs/CHALLENGE.md](../docs/CHALLENGE.md).
+
+- [x] Mainnet prod + GoPlausible + Bazaar discovery + `x402-global-challenge` tag
+- [x] [Submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (submitted 2026-10-01)
+- [x] Public repo + landing/OG at https://x402.darkhold.dev/
+- [ ] Electric Capital [open-dev-data PR #3083](https://github.com/electric-capital/open-dev-data/pull/3083) merged
+- [ ] Organic Mainnet usage (avoid self-pay loops for judging; see [troubleshooting](https://algorand.co/blog/is-your-x402-endpoint-showing-up-in-the-facilitator-leaderboard-how-to-troubleshoot-if-not))
 
 ---
 

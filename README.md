@@ -30,8 +30,9 @@ curl -s -X POST https://x402.darkhold.dev/v1/brief \
 # → HTTP 402 (payment required)
 ```
 
-Paid flow (wallet + x402 client): see [docs/API.md](./docs/API.md) and [docs/PROTOCOL.md](./docs/PROTOCOL.md).  
-Machine-readable: `GET /.well-known/x402.json`, `GET /llms.txt`.
+Paid flow (wallet + x402 client): see [docs/API.md](./docs/API.md) and [docs/PROTOCOL.md](./docs/PROTOCOL.md).
+
+**Discovery:** Browser landing at `/` (OpenGraph for Bazaar). Machine-readable: `GET /.well-known/x402.json`, `GET /llms.txt`, or `GET /` with `Accept: application/json`. Bazaar extension on `POST /v1/brief` (see [docs/CHALLENGE.md](./docs/CHALLENGE.md)).
 
 ## Architecture
 

@@ -23,7 +23,7 @@ Checklist before **Settings → Change visibility → Public** (challenge / open
 - [x] [LICENSE](../LICENSE) (MIT).
 - [x] Short description + topics on GitHub (`algorand`, `x402`, `cloudflare-workers`, `agentic-commerce`).
 - [x] README links prod base + `POST /v1/brief`, challenge tag `x402-global-challenge`.
-- [ ] Run `pnpm typecheck` && `pnpm test` on `main`.
+- [x] Run `pnpm typecheck` && `pnpm test` on `main` (CI on push).
 - [ ] Optional: enable branch protection on `main` (require CI).
 
 ## After public
