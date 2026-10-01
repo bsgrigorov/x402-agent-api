@@ -96,7 +96,7 @@ Secrets:
 
 - [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
 - [x] Make repo public (`docs/PUBLIC.md`)
-- [ ] Electric Capital `open-dev-data` PR (see `docs/CHALLENGE.md` § Electric Capital)
+- [ ] Electric Capital `open-dev-data` PR merged ([#3083](https://github.com/electric-capital/open-dev-data/pull/3083), opened 2026-10-01)
 - [x] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (submitted 2026-10-01)
 - [x] Bazaar discovery extension on Worker
 - [x] Leaderboard / Bazaar check (GoPlausible)

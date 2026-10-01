@@ -28,7 +28,7 @@ Checklist before **Settings → Change visibility → Public** (challenge / open
 
 ## After public
 
-- [ ] Electric Capital: PR to [open-dev-data](https://github.com/electric-capital/open-dev-data) (see [docs/CHALLENGE.md](./CHALLENGE.md)).
+- [ ] Electric Capital: [open-dev-data PR #3083](https://github.com/electric-capital/open-dev-data/pull/3083) (awaiting merge; see [docs/CHALLENGE.md](./CHALLENGE.md)).
 - [x] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) with public repo URL.
 - [ ] Do not open issues with logs containing `INGEST_TOKEN` or payment headers.
 

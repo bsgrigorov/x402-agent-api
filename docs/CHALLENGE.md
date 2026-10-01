@@ -30,6 +30,8 @@ Project details + repo URL: [submission form](https://fjtqz.share-eu1.hsforms.co
 
 Electric Capital reviews and merges on their schedule; absence from open-dev-data does **not** block GoPlausible settle or Bazaar listing.
 
+**Our PR:** https://github.com/electric-capital/open-dev-data/pull/3083 (pending merge).
+
 ## Merchant branding (Bazaar)
 
 Facilitator reads **domain metadata** for merchant cards:
