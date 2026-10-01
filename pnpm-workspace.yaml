@@ -1,3 +1,8 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# pnpm 11+: allow native builds required by wrangler / esbuild (no global dangerouslyAllowAllBuilds).
+allowBuilds:
+  esbuild: true
+  workerd: true

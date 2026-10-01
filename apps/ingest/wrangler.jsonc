@@ -28,7 +28,7 @@
         {
           "binding": "DB",
           "database_name": "x402-agent-api-prod",
-          "database_id": "REPLACE_AFTER_WRANGLER_D1_CREATE",
+          "database_id": "f6c5148b-d583-46fe-82d2-fd00719afb51",
           "migrations_dir": "../../packages/db/migrations"
         }
       ],

@@ -51,10 +51,11 @@ export function defaultWalletsPath(): string {
 }
 
 export function defaultVaultPath(): string {
-  return resolve(
-    process.env.WALLETS_VAULT_FILE ??
-      `${process.env.HOME}/dev/repos/kb/kb-vault-private/projects/algorand-x402/testnet-wallets.json`,
-  );
+  const p = process.env.WALLETS_VAULT_FILE;
+  if (!p) {
+    throw new Error("Set WALLETS_VAULT_FILE or pass --vault-path");
+  }
+  return resolve(p);
 }
 
 export function defaultDevVarsPath(): string {
@@ -89,11 +90,23 @@ export function usdcAsaFor(network: NetworkName): number {
   return network === "mainnet" ? USDC_MAINNET_ASA_ID : USDC_TESTNET_ASA_ID;
 }
 
+export function networkNameFromWalletsFile(networkField: string): NetworkName {
+  return networkField === "algorand-mainnet" ? "mainnet" : "testnet";
+}
+
+/** AlgoKit Lora account explorer (mainnet/testnet). */
+export function explorerAccountUrl(address: string, network: NetworkName): string {
+  return `https://lora.algokit.io/${network}/account/${address}`;
+}
+
 export function publicSummary(w: WalletsFile): Record<string, string> {
+  const net = networkNameFromWalletsFile(w.network);
   return {
     network: w.network,
     merchant: w.merchant.address,
     payer: w.payer.address,
     usdc_asa_id: w.usdc_asa_id,
+    merchant_explorer: explorerAccountUrl(w.merchant.address, net),
+    payer_explorer: explorerAccountUrl(w.payer.address, net),
   };
 }

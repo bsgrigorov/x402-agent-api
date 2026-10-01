@@ -71,12 +71,21 @@ curl -s -X POST http://127.0.0.1:8789/internal/run-ingest \
 ## Deploy
 
 ```bash
-pnpm db:migrate:remote   # packages/db → same D1
-pnpm deploy:dev          # api then ingest (Testnet)
-# pnpm deploy:prod       # Mainnet — only after Testnet E2E
-# Set INGEST_TOKEN secret on both Workers (api hydrate + ingest run-ingest)
+pnpm db:migrate:remote        # dev D1
+pnpm db:migrate:remote:prod   # prod D1
+pnpm deploy:dev               # Testnet workers
+pnpm deploy:prod              # Mainnet — x402.darkhold.dev only (see scripts/README.md)
 ```
 
-Contest research: `~/dev/repos/personal/kb/personal/kb-projects/projects/algorand-x402-challenge/`.
+Set `PAY_TO` + `INGEST_TOKEN` via `wrangler secret` on **both** api and ingest per env.
+Mainnet wallet / funding / paid E2E: **scripts/README.md** § Mainnet.
 
-Protocol / trust model: [docs/PROTOCOL.md](./docs/PROTOCOL.md). Progress: [docs/PROGRESS.md](./docs/PROGRESS.md).
+**GitHub Actions** (`.github/workflows/deploy-*.yml`): repo secrets `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID` (same account as `account_id` in `wrangler.jsonc`). Create a custom API
+token in the Cloudflare dashboard with account **Workers Scripts/Routes** and **D1** Edit, **Account
+Settings** Read; then `gh secret set` both names. Optional local helpers (gitignored):
+`sibling secret/scripts/push-gha-cf-secrets.sh`. Push to `main` runs dev deploy (migrate + workers);
+prod is manual `workflow_dispatch` (type `deploy-prod`).
+
+More: [docs/PROTOCOL.md](./docs/PROTOCOL.md), [docs/PROGRESS.md](./docs/PROGRESS.md),
+[docs/PUBLIC.md](./docs/PUBLIC.md) (public-repo checklist), [SECURITY.md](./SECURITY.md).

@@ -10,7 +10,8 @@
     "build": "tsc --noEmit",
     "test": "echo 'no db unit tests yet'",
     "db:migrate:local": "wrangler d1 migrations apply DB --local --env=dev --persist-to ../../.wrangler/state",
-    "db:migrate:remote": "wrangler d1 migrations apply DB --remote --env=dev"
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote --env=dev",
+    "db:migrate:remote:prod": "wrangler d1 migrations apply DB --remote --env=prod"
   },
   "dependencies": {
     "@x402-agent-api/shared": "workspace:*"

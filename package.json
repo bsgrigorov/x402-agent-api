@@ -1,7 +1,7 @@
 {
   "name": "x402-agent-api",
   "private": true,
-  "packageManager": "pnpm@10.32.0",
+  "packageManager": "pnpm@11.28.3+sha512.d49760a13b1755948775a5d4cb1bc4ba871ff2dc941adf851630d044ed722f9b5be8be57bef93166098c80c706bd612c282d05526dd1d0ae660188c086820f35",
   "engines": {
     "node": ">=24.14.0"
   },
@@ -19,6 +19,7 @@
     "deploy:prod:ingest": "pnpm --filter @x402-agent-api/ingest deploy:prod",
     "db:migrate:local": "pnpm --filter @x402-agent-api/db db:migrate:local",
     "db:migrate:remote": "pnpm --filter @x402-agent-api/db db:migrate:remote",
+    "db:migrate:remote:prod": "pnpm --filter @x402-agent-api/db db:migrate:remote:prod",
     "hydrate": "tsx scripts/hydrate.ts",
     "wallets:generate": "tsx scripts/generate-wallets.ts",
     "wallets:new-payer": "tsx scripts/rotate-payer.ts",

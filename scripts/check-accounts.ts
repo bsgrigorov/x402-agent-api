@@ -10,6 +10,8 @@ import {
   ALGOD,
   argValue,
   defaultWalletsPath,
+  explorerAccountUrl,
+  networkNameFromWalletsFile,
   readWallets,
   usdcAsaFor,
   type NetworkName,
@@ -44,6 +46,7 @@ async function checkAddress(
         opted_in_usdc: Boolean(usdc),
         usdc: usdc ? (usdc.amount ?? 0) / 1e6 : 0,
         asa,
+        explorer: explorerAccountUrl(address, network),
       },
       null,
       2,
@@ -52,9 +55,10 @@ async function checkAddress(
 }
 
 async function main(): Promise<void> {
-  const network = (argValue("--network") ?? "testnet") as NetworkName;
   const filePath = argValue("--file") ?? defaultWalletsPath();
   const wallets = readWallets(filePath);
+  const network = (argValue("--network") ??
+    networkNameFromWalletsFile(wallets.network)) as NetworkName;
   await checkAddress("merchant", wallets.merchant.address, network);
   await checkAddress("payer", wallets.payer.address, network);
 }

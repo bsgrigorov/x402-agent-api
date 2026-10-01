@@ -16,6 +16,7 @@ import {
   argFlag,
   argValue,
   defaultWalletsPath,
+  networkNameFromWalletsFile,
   readWallets,
   usdcAsaFor,
   type NetworkName,
@@ -73,7 +74,10 @@ async function optInRole(
 }
 
 async function main(): Promise<void> {
-  const network = (argValue("--network") ?? "testnet") as NetworkName;
+  const filePath = argValue("--file") ?? defaultWalletsPath();
+  const wallets = readWallets(filePath);
+  const network = (argValue("--network") ??
+    networkNameFromWalletsFile(wallets.network)) as NetworkName;
   if (network !== "testnet" && network !== "mainnet") {
     console.error("--network must be testnet|mainnet");
     process.exit(1);
@@ -82,9 +86,6 @@ async function main(): Promise<void> {
     console.error("Refusing Mainnet without --i-understand-mainnet");
     process.exit(1);
   }
-
-  const filePath = argValue("--file") ?? defaultWalletsPath();
-  const wallets = readWallets(filePath);
   const roleArg = argValue("--role") as WalletRole | undefined;
   const roles: WalletRole[] =
     roleArg === "merchant" || roleArg === "payer" ? [roleArg] : ["merchant", "payer"];

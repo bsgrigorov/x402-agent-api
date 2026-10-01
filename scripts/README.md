@@ -1,8 +1,8 @@
 # Ops scripts — wallets, hydrate, local smoke
 
 These are **repeatable** helpers for a new environment / wallet set. Secrets stay in
-gitignored files under `apps/api/` (and optionally kb-vault-private). Scripts never
-commit keys.
+gitignored paths (`apps/api/.wallets*.json`, repo sibling `../secret/`, optional
+kb-vault-private). Scripts never commit keys or print mnemonics.
 
 | Script | pnpm | Purpose |
 |--------|------|---------|
@@ -16,7 +16,7 @@ commit keys.
 Defaults:
 
 - Wallets file: `apps/api/.wallets.testnet.json` (override with `WALLETS_FILE` or `--file` / `--out`)
-- Vault (age-encrypted): `~/dev/repos/personal/kb/personal/kb-vault-private/projects/algorand-x402/testnet-wallets.json.age`
+- Vault (age-encrypted): optional; path from `wallets:generate --vault` / your vault layout
 - Live plaintext (gitignored, stays in project): `apps/api/.wallets.testnet.json`
 - Algod: AlgoNode public Testnet/Mainnet
 
@@ -128,24 +128,111 @@ pnpm e2e:pay-brief
 
 Expect: settle `success: true`, brief HTTP 200, payer USDC decreased by ~$0.05.
 
+`e2e-pay-brief` picks **Testnet vs Mainnet** from the wallet file `network` field
+(`algorand-testnet` / `algorand-mainnet`). Optional: `--count N`, `--quiet` (log tx ids only).
+
 ---
 
-## Mainnet (later)
+## Mainnet (challenge / prod)
+
+**Network:** Algorand **Mainnet** only (not Base/Ethereum). **USDC** = ASA **`31566704`**.
+
+**Host:** `https://x402.darkhold.dev` only — never set Mainnet `PAY_TO` on `*.workers.dev`.
+
+Recommended wallet file: sibling `../secret/wallets.mainnet.json` (gitignored via `secret/.gitignore`).
+
+### 1. Generate wallets (merchant + payer)
+
+Two keys: **merchant** = `PAY_TO` (keep for whole contest); **payer** = local paid E2E only.
 
 ```bash
-WALLETS_FILE=./apps/api/.wallets.mainnet.json \
-  pnpm wallets:generate -- --network mainnet --i-understand-mainnet --out ./apps/api/.wallets.mainnet.json
-
-pnpm wallets:opt-in -- --network mainnet --i-understand-mainnet \
-  --file ./apps/api/.wallets.mainnet.json
+cd x402-agent-api
+pnpm wallets:generate -- --network mainnet --i-understand-mainnet \
+  --out ../secret/wallets.mainnet.json
 ```
 
-USDC Mainnet ASA is `31566704`. Never put Mainnet `PAY_TO` on `*.workers.dev`.
+`wallets:generate` prints addresses + AlgoKit explorer URLs (no secrets).
+
+### 2. Fund ALGO (both addresses)
+
+Send **~2–10 ALGO** on **Algorand Mainnet** to **merchant** and **payer** (exchange withdraw
+or Algorand-native wallet). Needed for min balance, fees, and opt-in txs.
+
+### 3. Opt into USDC (both addresses)
+
+**After** ALGO lands:
+
+```bash
+pnpm wallets:opt-in -- --i-understand-mainnet --file ../secret/wallets.mainnet.json
+```
+
+Network is inferred from the wallet file (`algorand-mainnet`). Override with `--network mainnet|testnet`.
+
+### 4. Fund USDC (payer only)
+
+Send **Algorand Mainnet USDC** (ASA 31566704) to the **payer** only (~$1–2 for smoke tests;
+`$0.05 × N` for N self-payments). Merchant can stay at **0 USDC**; it **receives** payments.
+
+| Role | ALGO | USDC |
+|------|------|------|
+| Merchant | Yes | Receive only (opt-in required) |
+| Payer | Yes | Yes (you pay the API) |
+
+### 5. Verify
+
+```bash
+pnpm wallets:check -- --file ../secret/wallets.mainnet.json
+```
+
+Infers mainnet from the wallet file; output includes `explorer` (AlgoKit Lora).  
+Pera: `https://explorer.perawallet.app/accounts/<address>`.
+
+### 6. Prod platform (once per env)
+
+```bash
+# D1 (if not created): wrangler d1 create x402-agent-api-prod — wire database_id in wrangler.jsonc
+pnpm db:migrate:remote:prod
+# wrangler secret put PAY_TO / INGEST_TOKEN on api + ingest prod workers
+pnpm deploy:prod
+```
+
+Prod ingest (populate D1 before a useful brief):
+
+```bash
+INGEST_TOKEN="$(cat ../secret/prod-ingest-token.txt)"
+curl -sS -X POST "https://x402-agent-ingest-prod.darkhold.workers.dev/internal/run-ingest" \
+  -H "authorization: Bearer $INGEST_TOKEN" \
+  -H 'content-type: application/json' \
+  -d '{"job":"hourly"}'
+```
+
+### 7. Paid E2E on Mainnet
+
+```bash
+BASE_URL=https://x402.darkhold.dev \
+WALLETS_FILE=../secret/wallets.mainnet.json \
+  pnpm e2e:pay-brief
+
+# Volume smoke (leaderboard); not a substitute for organic usage
+BASE_URL=https://x402.darkhold.dev \
+WALLETS_FILE=../secret/wallets.mainnet.json \
+  pnpm e2e:pay-brief -- --count 5 --quiet
+```
+
+Expect: `success: true`, merchant USDC +$0.05 per call, payer USDC −$0.05 per call.
+
+### Challenge checklist (off-repo)
+
+- [Submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (deadline per [challenge post](https://algorand.co/blog/the-x402-global-challenge-is-live-how-to-build-submit-your-entry))
+- Electric Capital: public GitHub repo with Algorand/x402 code
+- GoPlausible leaderboard + Bazaar (hackathon filter); Bazaar discovery extension still TBD in Worker
 
 ---
+
 
 ## Cloudflare notes
 
-- `account_id` in `wrangler.jsonc` is not a secret; pin the personal account.
+- GHA: `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` repo secrets (README § Deploy).
+- `account_id` in `wrangler.jsonc` is not a credential; API tokens stay in env / GitHub secrets.
 - `.dev.vars` / wallet JSON / OAuth tokens stay local.
 - Local workerd outbound HTTPS can break with Cloudflare WARP on — turn WARP off for `wrangler dev`.

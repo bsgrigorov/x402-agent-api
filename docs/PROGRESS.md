@@ -1,12 +1,12 @@
 # Progress — x402-agent-api
 
-> Living note. Contest research: `kb-projects/projects/algorand-x402-challenge/`.
+> Living note. Contest research lives outside this repo (internal KB).
 
 ## 2026-08-06
 
 - Created private GitHub repo `bsgrigorov/x402-agent-api` (confirmed **private**)
-- Local path: `~/dev/repos/synkube/x402-challenge/x402-agent-api`
-- Cloudflare account pinned: **brslv** / `68dc41440ae5da6f6c21bfb160a117a5` (personal gmail). Account ID is **not a secret** (safe in wrangler.jsonc); OAuth/API tokens are.
+- Repo: `x402-agent-api` (monorepo root)
+- Cloudflare account pinned in `wrangler.jsonc` (`68dc41440ae5da6f6c21bfb160a117a5`). Account ID is **not a secret**; API tokens are.
 - Scaffolded monorepo: `apps/api` + `packages/{feeds,shared}` + GHA + hydrate script
 - Separation locked in code:
   - `apps/api` — paid HTTP (`fetch`); ledger/payments in `src/store`
@@ -28,7 +28,7 @@ Payer rotated 2026-08-07 (old `L7UAGJP3…` retired after Circle send before opt
 Secrets:
 
 - Local (gitignored): `apps/api/.wallets.testnet.json`
-- Vault (age-encrypted): `~/dev/repos/personal/kb/personal/kb-vault-private/projects/algorand-x402/testnet-wallets.json.age` (plaintext remains gitignored at `apps/api/.wallets.testnet.json`)
+- Optional age-encrypted vault copy (local; never committed)
 
 `apps/api/.dev.vars` `PAY_TO` updated to merchant address. Restart wrangler to pick it up.
 
@@ -86,7 +86,17 @@ Secrets:
 - [x] Replay reject: `payment_claims` UNIQUE on payment-header hash → **409**
 - [x] Harden `INGEST_TOKEN` (≥32 + timing-safe compare); rotated local + CF `dev`
 
+### 2026-10-01 — Mainnet prod
+
+- Mainnet wallets in `x402-challenge/secret/` (gitignored); prod D1 + migrations; `x402-agent-api-prod` on `x402.darkhold.dev`; ingest prod + cron
+- Paid Mainnet E2E + multi-pay smoke (`e2e:pay-brief --count`); script fixes (mainnet CAIP-2 register, `wallets:check` explorer + network infer)
+- Ops runbook: `scripts/README.md` § Mainnet
+
 ### Next
 
-- [ ] Re-enable bazaar discovery once Workers-safe (no Ajv codegen)
-- [ ] Register for challenge; Mainnet only after custom domain / Mainnet wallets
+- [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
+- [ ] Make repo public (`docs/PUBLIC.md`) + Electric Capital
+- [ ] Challenge submission form
+- [ ] Bazaar discovery extension (Workers-safe; tag in `extra` today)
+- [ ] Brief polish; OpenRouter when `synthesize` ships
+- [ ] Leaderboard / Bazaar check (GoPlausible)
