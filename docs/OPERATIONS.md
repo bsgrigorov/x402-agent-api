@@ -33,8 +33,29 @@ Secrets: `PAY_TO`, `INGEST_TOKEN` via `wrangler secret` on api + ingest per env.
 Workflows: `deploy-dev.yml` (push to `main`), `deploy-prod.yml` (`workflow_dispatch`, confirm
 `deploy-prod`). Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
 
-Prod custom domain is attached in the Cloudflare dashboard (not in `wrangler.jsonc` routes) so
-account-scoped CI tokens work.
+Prod host `x402.darkhold.dev` is declared in `apps/api/wrangler.jsonc` (`custom_domain` route on
+zone `darkhold.dev`).
+
+### Cloudflare API token (CI)
+
+| Field | Value |
+|-------|--------|
+| **Name** | `github-x402-agent-api-deploy` (User API token) |
+| **Account** | `68dc41440ae5da6f6c21bfb160a117a5` (`CLOUDFLARE_ACCOUNT_ID` secret) |
+| **Zone (routes only)** | `darkhold.dev` → `303b8d436bf0bb6ac699d2981511cb1a` |
+
+**Permissions (minimal for deploy-dev / deploy-prod):**
+
+- Account `68dc41440ae5da6f6c21bfb160a117a5`: Workers Scripts Write, D1 Write, Account Settings Read
+- Zone `303b8d436bf0bb6ac699d2981511cb1a`: Workers Routes Write
+
+Covers `wrangler deploy` for `x402-agent-api-{dev,prod}`, `x402-agent-ingest-{dev,prod}`, remote D1
+migrations, and prod custom domain route. **No IP filter** (GHA egress). Do not reuse
+`brslv-mac-automation` in GHA.
+
+**Mint / rotate** (gitignored sibling repo): `x402-challenge/secret/scripts/` — set
+`CF_PARENT_API_TOKEN` (User → API Tokens Edit), `CLOUDFLARE_ACCOUNT_ID`, then
+`./push-gha-cf-secrets.sh`. Probe: `./test-cf-deploy-token.sh`.
 
 ## Public surface (prod)
 

@@ -104,9 +104,16 @@ Secrets:
 - Deployed prod (`x402-agent-api-prod`); securityheaders-grade headers verified live
 - `GET /` content negotiation: HTML for `*/*` and preview bots; JSON only with `Accept: application/json`
 
+### 2026-10-01 — Narrow GHA Cloudflare token + prod route in wrangler
+
+- User API token **`github-x402-agent-api-deploy`**: account Workers Scripts + D1 + zone Workers
+  Routes on `darkhold.dev` only (see `docs/OPERATIONS.md`)
+- `apps/api/wrangler.jsonc`: prod `custom_domain` route for `x402.darkhold.dev`
+- GHA secret updated; local deploy verified with minted token
+
 ### Next
 
-- [x] `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
+- [x] `CLOUDFLARE_API_TOKEN` (`github-x402-agent-api-deploy`) + `CLOUDFLARE_ACCOUNT_ID` in GitHub secrets
 - [x] Make repo public (`docs/PUBLIC.md`)
 - [ ] Electric Capital `open-dev-data` PR merged ([#3083](https://github.com/electric-capital/open-dev-data/pull/3083), opened 2026-10-01)
 - [x] Challenge [submission form](https://fjtqz.share-eu1.hsforms.com/2VnFVCiF_Sg26XP85Jxz_bA) (submitted 2026-10-01)

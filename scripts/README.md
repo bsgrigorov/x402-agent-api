@@ -236,7 +236,8 @@ Full checklist: [docs/CHALLENGE.md](../docs/CHALLENGE.md).
 
 ## Cloudflare notes
 
-- GHA: `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` repo secrets (README § Deploy).
+- GHA: `CLOUDFLARE_API_TOKEN` (`github-x402-agent-api-deploy`, scoped per `docs/OPERATIONS.md`) +
+  `CLOUDFLARE_ACCOUNT_ID` repo secrets.
 - `account_id` in `wrangler.jsonc` is not a credential; API tokens stay in env / GitHub secrets.
 - `.dev.vars` / wallet JSON / OAuth tokens stay local.
 - Local workerd outbound HTTPS can break with Cloudflare WARP on — turn WARP off for `wrangler dev`.
