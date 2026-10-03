@@ -1,8 +1,8 @@
 # Ops scripts — wallets, hydrate, local smoke
 
 These are **repeatable** helpers for a new environment / wallet set. Secrets stay in
-gitignored paths (`apps/api/.wallets*.json`, repo sibling `../secret/`, optional
-kb-vault-private). Scripts never commit keys or print mnemonics.
+gitignored paths (`apps/api/.wallets*.json`, sibling `../ops/` age + QRs, kb-vault-private).
+Scripts never commit keys or print mnemonics. Mainnet: `../ops/scripts/with-wallets.sh`.
 
 | Script | pnpm | Purpose |
 |--------|------|---------|
@@ -139,7 +139,7 @@ Expect: settle `success: true`, brief HTTP 200, payer USDC decreased by ~$0.05.
 
 **Host:** `https://x402.darkhold.dev` only — never set Mainnet `PAY_TO` on `*.workers.dev`.
 
-Recommended wallet file: sibling `../secret/wallets.mainnet.json` (gitignored via `secret/.gitignore`).
+Mainnet keys: `../ops/wallets.mainnet.json.age` (see `../ops/scripts/README.md`).
 
 ### 1. Generate wallets (merchant + payer)
 
@@ -148,10 +148,10 @@ Two keys: **merchant** = `PAY_TO` (keep for whole contest); **payer** = local pa
 ```bash
 cd x402-agent-api
 pnpm wallets:generate -- --network mainnet --i-understand-mainnet \
-  --out ../secret/wallets.mainnet.json
+  --out ../ops/wallets.mainnet.json
 ```
 
-`wallets:generate` prints addresses + AlgoKit explorer URLs (no secrets).
+`wallets:generate` prints addresses + AlgoKit explorer URLs (no secrets). Then `../ops/scripts/secrets-pack.sh` (also copies `.age` to kb-vault-private).
 
 ### 2. Fund ALGO (both addresses)
 
@@ -163,7 +163,7 @@ or Algorand-native wallet). Needed for min balance, fees, and opt-in txs.
 **After** ALGO lands:
 
 ```bash
-pnpm wallets:opt-in -- --i-understand-mainnet --file ../secret/wallets.mainnet.json
+../ops/scripts/with-wallets.sh wallets:opt-in -- --i-understand-mainnet
 ```
 
 Network is inferred from the wallet file (`algorand-mainnet`). Override with `--network mainnet|testnet`.
@@ -181,7 +181,7 @@ Send **Algorand Mainnet USDC** (ASA 31566704) to the **payer** only (~$1–2 for
 ### 5. Verify
 
 ```bash
-pnpm wallets:check -- --file ../secret/wallets.mainnet.json
+../ops/scripts/with-wallets.sh wallets:check
 ```
 
 Infers mainnet from the wallet file; output includes `explorer` (AlgoKit Lora).  
@@ -199,7 +199,7 @@ pnpm deploy:prod
 Prod ingest (populate D1 before a useful brief):
 
 ```bash
-INGEST_TOKEN="$(cat ../secret/prod-ingest-token.txt)"
+INGEST_TOKEN="$(../ops/scripts/read-ingest-token.sh)"
 curl -sS -X POST "https://x402-agent-ingest-prod.darkhold.workers.dev/internal/run-ingest" \
   -H "authorization: Bearer $INGEST_TOKEN" \
   -H 'content-type: application/json' \
@@ -209,14 +209,10 @@ curl -sS -X POST "https://x402-agent-ingest-prod.darkhold.workers.dev/internal/r
 ### 7. Paid E2E on Mainnet
 
 ```bash
-BASE_URL=https://x402.darkhold.dev \
-WALLETS_FILE=../secret/wallets.mainnet.json \
-  pnpm e2e:pay-brief
+BASE_URL=https://x402.darkhold.dev ../ops/scripts/with-wallets.sh e2e:pay-brief
 
 # Volume smoke (leaderboard); not a substitute for organic usage
-BASE_URL=https://x402.darkhold.dev \
-WALLETS_FILE=../secret/wallets.mainnet.json \
-  pnpm e2e:pay-brief -- --count 5 --quiet
+BASE_URL=https://x402.darkhold.dev ../ops/scripts/with-wallets.sh e2e:pay-brief -- --count 5 --quiet
 ```
 
 Expect: `success: true`, merchant USDC +$0.05 per call, payer USDC −$0.05 per call.

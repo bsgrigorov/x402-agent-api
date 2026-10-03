@@ -53,7 +53,7 @@ Covers `wrangler deploy` for `x402-agent-api-{dev,prod}`, `x402-agent-ingest-{de
 migrations, and prod custom domain route. **No IP filter** (GHA egress). Do not reuse
 `brslv-mac-automation` in GHA.
 
-**Mint / rotate** (gitignored sibling repo): `x402-challenge/secret/scripts/` — set
+**Mint / rotate** (gitignored sibling): `x402-challenge/ops/scripts/` — set
 `CF_PARENT_API_TOKEN` (User → API Tokens Edit), `CLOUDFLARE_ACCOUNT_ID`, then
 `./push-gha-cf-secrets.sh`. Probe: `./test-cf-deploy-token.sh`.
 

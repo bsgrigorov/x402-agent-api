@@ -10,8 +10,7 @@
  * Usage:
  *   pnpm e2e:pay-brief
  *   BASE_URL=http://127.0.0.1:8787 pnpm e2e:pay-brief
- *   BASE_URL=https://x402.darkhold.dev WALLETS_FILE=../secret/wallets.mainnet.json \
- *     pnpm e2e:pay-brief -- --count 5 --quiet
+ *   BASE_URL=https://x402.darkhold.dev ../ops/scripts/with-wallets.sh e2e:pay-brief -- --count 5 --quiet
  */
 import { x402Client, wrapFetchWithPayment, x402HTTPClient } from "@x402/fetch";
 import {

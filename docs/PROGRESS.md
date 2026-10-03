@@ -82,7 +82,7 @@ Secrets:
 
 ### 2026-10-01 — Mainnet prod
 
-- Mainnet wallets in sibling `secret/` (gitignored); prod D1 + migrations; `x402-agent-api-prod` on `x402.darkhold.dev`; ingest prod + cron
+- Mainnet wallets in sibling `ops/` (gitignored); prod D1 + migrations; `x402-agent-api-prod` on `x402.darkhold.dev`; ingest prod + cron
 - Paid Mainnet E2E + multi-pay smoke (`e2e:pay-brief --count`); script fixes (mainnet CAIP-2 register, `wallets:check` explorer + network infer)
 - Ops runbook: `scripts/README.md` § Mainnet
 

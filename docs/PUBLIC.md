@@ -6,7 +6,7 @@ Checklist before **Settings → Change visibility → Public** (challenge / open
 
 - [ ] No wallet JSON, `.dev.vars`, `prod-ingest-token.txt`, or QR PNGs in git (`git status`, search for `mnemonic`, `privateKeyBase64`).
 - [ ] Wrangler secrets (`PAY_TO`, `INGEST_TOKEN`) only in Cloudflare, not in repo.
-- [ ] `secret/` and `apps/api/.wallets*` stay **outside** this repo or gitignored (sibling `x402-challenge/secret/` is correct).
+- [ ] `ops/` and `apps/api/.wallets*` stay **outside** this repo or gitignored (sibling `x402-challenge/ops/` is correct).
 - [ ] GitHub Actions: `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` (see README § Deploy).
 - [ ] Review `docs/PROGRESS.md` for personal paths you do not want public (home dirs, email).
 
